@@ -7,7 +7,6 @@ import me.ubmagh.ng_spring_digital_banking.exceptions.CustomerNotFoundException;
 import me.ubmagh.ng_spring_digital_banking.services.BankAccountService;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController

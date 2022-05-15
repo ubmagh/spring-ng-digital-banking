@@ -1,7 +1,10 @@
 package me.ubmagh.ng_spring_digital_banking.services;
 
 
+import me.ubmagh.ng_spring_digital_banking.dtos.BankAccountDTO;
+import me.ubmagh.ng_spring_digital_banking.dtos.CurrentBankAccountDTO;
 import me.ubmagh.ng_spring_digital_banking.dtos.CustomerDTO;
+import me.ubmagh.ng_spring_digital_banking.dtos.SavingBankAccountDTO;
 import me.ubmagh.ng_spring_digital_banking.entities.BankAccount;
 import me.ubmagh.ng_spring_digital_banking.entities.CurrentAccount;
 import me.ubmagh.ng_spring_digital_banking.entities.Customer;
@@ -20,13 +23,13 @@ public interface BankAccountService {
 
     CustomerDTO saveCustomer(CustomerDTO customerDTO);
 
-    CurrentAccount saveCurrentBankAccount(double initialBalance, double overDraft, String customerId) throws CustomerNotFoundException;
+    CurrentBankAccountDTO saveCurrentBankAccount(double initialBalance, double overDraft, String customerId) throws CustomerNotFoundException;
 
-    SavingAccount saveSavingBankAccount(double initialBalance, double interestRate, String customerId) throws CustomerNotFoundException;
+    SavingBankAccountDTO saveSavingBankAccount(double initialBalance, double interestRate, String customerId) throws CustomerNotFoundException;
 
     List<CustomerDTO> listCustomers();
 
-    BankAccount getBankAccount( String bankAccountId) throws BankAccountNotFoundExcetion;
+    BankAccountDTO getBankAccount(String bankAccountId) throws BankAccountNotFoundExcetion;
 
     void debit( String accountId, double amount, String description) throws BankAccountNotFoundExcetion, BalanceNotSufficientException;
 
@@ -36,9 +39,13 @@ public interface BankAccountService {
 
     List<BankAccount> listBankAccount();
 
+    List<BankAccountDTO> listBankAccountDto();
+
     CustomerDTO getCustomer(String customerId) throws CustomerNotFoundException;
 
     CustomerDTO updateCustomer(CustomerDTO customerDTO) throws CustomerNotFoundException;
 
     void deleteCustomer(String customerId);
+
+
 }
