@@ -1,10 +1,7 @@
 package me.ubmagh.ng_spring_digital_banking.services;
 
 
-import me.ubmagh.ng_spring_digital_banking.dtos.BankAccountDTO;
-import me.ubmagh.ng_spring_digital_banking.dtos.CurrentBankAccountDTO;
-import me.ubmagh.ng_spring_digital_banking.dtos.CustomerDTO;
-import me.ubmagh.ng_spring_digital_banking.dtos.SavingBankAccountDTO;
+import me.ubmagh.ng_spring_digital_banking.dtos.*;
 import me.ubmagh.ng_spring_digital_banking.entities.BankAccount;
 import me.ubmagh.ng_spring_digital_banking.entities.CurrentAccount;
 import me.ubmagh.ng_spring_digital_banking.entities.Customer;
@@ -48,4 +45,7 @@ public interface BankAccountService {
     void deleteCustomer(String customerId);
 
 
+    List<AccountOperationDTO> getAccountOperationsHistory(String accountId);
+
+    AccountHistoryDTO getAccountHistory(String accountId, int page, int size) throws BankAccountNotFoundExcetion;
 }

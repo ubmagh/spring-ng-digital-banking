@@ -27,7 +27,7 @@ public class NgSpringDigitalBankingApplication {
 		SpringApplication.run(NgSpringDigitalBankingApplication.class, args);
 	}
 
-	//@Bean
+	// @Bean
 	CommandLineRunner fillDbUsingBAService(BankAccountService bankAccountService){
 		return  args -> {
 			Faker faker = new Faker();
@@ -45,31 +45,35 @@ public class NgSpringDigitalBankingApplication {
 
 				try {
 					bankAccountService.saveCurrentBankAccount(
-							faker.number().randomDouble(2, 10, 9999999),
+							faker.number().randomDouble(2, 10000, 9999999),
 							faker.number().randomDouble(2, 500, 9000),
 							customer.getId()
 					);
 
 					bankAccountService.saveSavingBankAccount(
-							faker.number().randomDouble(2, 10, 9999999),
+							faker.number().randomDouble(2, 10000, 9999999),
 							faker.number().randomDouble(2, 0, 100),
 							customer.getId()
 					);
 
-					for(BankAccount account: bankAccountService.listBankAccount()){
 
-						for( int i=0; i<faker.random().nextInt(8,11); i++){
-								bankAccountService.credit( account.getId(), 17*faker.number().randomDouble(2, 111, 1111), "Crédit !" );
-							bankAccountService.debit( account.getId(), 17*faker.number().randomDouble(2, 111, 1111), "Débit !" );
-						}
-
-					};
-				} catch (CustomerNotFoundException|BankAccountNotFoundExcetion|BalanceNotSufficientException  e) {
+				} catch (CustomerNotFoundException  e) {
 					e.printStackTrace();
 				}
 
 
 			});
+
+			try {
+				for (BankAccount account : bankAccountService.listBankAccount()) {
+					for (int i = 0; i < faker.random().nextInt(8, 11); i++) {
+						bankAccountService.credit(account.getId(), 17 * faker.number().randomDouble(2, 111, 1111), "Crédit !");
+						bankAccountService.debit(account.getId(), 17 * faker.number().randomDouble(2, 111, 1111), "Débit !");
+					}
+				};
+			} catch (BankAccountNotFoundExcetion | BalanceNotSufficientException e) {
+				e.printStackTrace();
+			}
 
 
 		};
