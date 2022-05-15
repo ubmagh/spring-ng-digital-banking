@@ -40,6 +40,15 @@ public class BankAccountServiceImpl implements BankAccountService {
         return savedCustomer;
     }
 
+    @Override
+    public CustomerDTO saveCustomer(CustomerDTO customerDTO) {
+        log.info("⌛ saving customer... ");
+        customerDTO.setId(UUID.randomUUID().toString());
+        Customer customer = customerMapper.fromCustomerDto( customerDTO);
+        Customer savedCustomer = customerRepository.save(customer);
+        log.info("✔ customer saved ");
+        return customerMapper.fromCustomer(savedCustomer);
+    }
 
     @Override
     public CurrentAccount saveCurrentBankAccount(double initialBalance, double overDraft, String customerId) throws CustomerNotFoundException {
@@ -150,6 +159,23 @@ public class BankAccountServiceImpl implements BankAccountService {
     public CustomerDTO getCustomer(String customerId) throws CustomerNotFoundException {
         Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException("Customer Not found !"));
         return customerMapper.fromCustomer( customer);
+    }
+
+    @Override
+    public CustomerDTO updateCustomer(CustomerDTO customerDTO) throws CustomerNotFoundException {
+        log.info("⌛ updating customer... ");
+        customerRepository.findById( customerDTO.getId()).orElseThrow(()-> new CustomerNotFoundException("Customer Not Found !"));
+        Customer customer = customerMapper.fromCustomerDto( customerDTO);
+        Customer savedCustomer = customerRepository.save(customer);
+        log.info("✔ customer updated ");
+        return customerMapper.fromCustomer(savedCustomer);
+    }
+
+    @Override
+    public void deleteCustomer(String customerId) {
+        log.info("⌛ deleting customer... ");
+        customerRepository.deleteById(customerId);
+        log.info("✔ customer deleted ");
     }
 
 }

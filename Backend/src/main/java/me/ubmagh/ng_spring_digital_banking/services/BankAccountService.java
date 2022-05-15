@@ -12,9 +12,11 @@ import me.ubmagh.ng_spring_digital_banking.exceptions.CustomerNotFoundException;
 
 import java.util.List;
 
+
+// TODO : sepration of concern : customerService, accountService ....
 public interface BankAccountService {
 
-    Customer saveCustomer( Customer customer);
+    Customer saveCustomer(Customer customer);
 
     CustomerDTO saveCustomer(CustomerDTO customerDTO);
 
@@ -34,4 +36,9 @@ public interface BankAccountService {
 
     List<BankAccount> listBankAccount();
 
+    CustomerDTO getCustomer(String customerId) throws CustomerNotFoundException;
+
+    CustomerDTO updateCustomer(CustomerDTO customerDTO) throws CustomerNotFoundException;
+
+    void deleteCustomer(String customerId);
 }
