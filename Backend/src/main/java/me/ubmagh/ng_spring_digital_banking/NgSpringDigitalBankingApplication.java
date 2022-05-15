@@ -10,6 +10,7 @@ import me.ubmagh.ng_spring_digital_banking.enums.OperationType;
 import me.ubmagh.ng_spring_digital_banking.repositories.BankAccountRepository;
 import me.ubmagh.ng_spring_digital_banking.repositories.CustomerRepository;
 import me.ubmagh.ng_spring_digital_banking.repositories.AccountOperationRepository;
+import me.ubmagh.ng_spring_digital_banking.services.BankService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,8 +26,16 @@ public class NgSpringDigitalBankingApplication {
 		SpringApplication.run(NgSpringDigitalBankingApplication.class, args);
 	}
 
+	@Bean
+	CommandLineRunner testingFunction(BankService bankService){
+		return args -> {
+			bankService.consulter();
+		};
+	}
+
+
 	// @Bean
-	CommandLineRunner fillDB(
+	CommandLineRunner fillDbUsingRepos(
 			CustomerRepository customerRepository,
 			BankAccountRepository bankAccountRepository,
 			AccountOperationRepository accountOperationRepository
