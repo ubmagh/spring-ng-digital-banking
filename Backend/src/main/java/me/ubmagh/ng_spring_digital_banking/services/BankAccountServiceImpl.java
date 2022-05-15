@@ -8,14 +8,10 @@ import me.ubmagh.ng_spring_digital_banking.enums.OperationType;
 import me.ubmagh.ng_spring_digital_banking.exceptions.BalanceNotSufficientException;
 import me.ubmagh.ng_spring_digital_banking.exceptions.BankAccountNotFoundExcetion;
 import me.ubmagh.ng_spring_digital_banking.exceptions.CustomerNotFoundException;
-import me.ubmagh.ng_spring_digital_banking.mappers.AccountOperationMapper;
 import me.ubmagh.ng_spring_digital_banking.mappers.BankAccountMapper;
-import me.ubmagh.ng_spring_digital_banking.mappers.CustomerMapper;
 import me.ubmagh.ng_spring_digital_banking.repositories.AccountOperationRepository;
 import me.ubmagh.ng_spring_digital_banking.repositories.BankAccountRepository;
 import me.ubmagh.ng_spring_digital_banking.repositories.CustomerRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -33,28 +29,8 @@ public class BankAccountServiceImpl implements BankAccountService {
     private CustomerRepository customerRepository;
     private BankAccountRepository accountRepository;
     private AccountOperationRepository operationRepository;
-    private CustomerMapper customerMapper;
     private BankAccountMapper bankAccountMapper;
-    private AccountOperationMapper accountOperationMapper;
 
-    @Override
-    public Customer saveCustomer(Customer customer) {
-        log.info("⌛ saving customer... ");
-        customer.setId(UUID.randomUUID().toString());
-        Customer savedCustomer = customerRepository.save(customer);
-        log.info("✔ customer saved ");
-        return savedCustomer;
-    }
-
-    @Override
-    public CustomerDTO saveCustomer(CustomerDTO customerDTO) {
-        log.info("⌛ saving customer... ");
-        customerDTO.setId(UUID.randomUUID().toString());
-        Customer customer = customerMapper.fromCustomerDto( customerDTO);
-        Customer savedCustomer = customerRepository.save(customer);
-        log.info("✔ customer saved ");
-        return customerMapper.fromCustomer(savedCustomer);
-    }
 
     @Override
     public CurrentBankAccountDTO saveCurrentBankAccount(double initialBalance, double overDraft, String customerId) throws CustomerNotFoundException {
@@ -100,13 +76,6 @@ public class BankAccountServiceImpl implements BankAccountService {
         return bankAccountMapper.fromSavingAccount( savingBankAccount );
     }
 
-    @Override
-    public List<CustomerDTO> listCustomers() {
-        log.info("✔ Got the list of customers !");
-        List<Customer> customers = customerRepository.findAll();
-        List<CustomerDTO> customerDTOS = customers.stream().map(customer -> customerMapper.fromCustomer(customer)).collect(Collectors.toList());
-        return customerDTOS;
-    }
 
     @Override
     public BankAccountDTO getBankAccount(String bankAccountId) throws BankAccountNotFoundExcetion {
@@ -174,50 +143,9 @@ public class BankAccountServiceImpl implements BankAccountService {
         return bankAccountDTOS;
     }
 
-    @Override
-    public CustomerDTO getCustomer(String customerId) throws CustomerNotFoundException {
-        Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new CustomerNotFoundException("Customer Not found !"));
-        return customerMapper.fromCustomer( customer);
-    }
-
-    @Override
-    public CustomerDTO updateCustomer(CustomerDTO customerDTO) throws CustomerNotFoundException {
-        log.info("⌛ updating customer... ");
-        customerRepository.findById( customerDTO.getId()).orElseThrow(()-> new CustomerNotFoundException("Customer Not Found !"));
-        Customer customer = customerMapper.fromCustomerDto( customerDTO);
-        Customer savedCustomer = customerRepository.save(customer);
-        log.info("✔ customer updated ");
-        return customerMapper.fromCustomer(savedCustomer);
-    }
-
-    @Override
-    public void deleteCustomer(String customerId) {
-        log.info("⌛ deleting customer... ");
-        customerRepository.deleteById(customerId);
-        log.info("✔ customer deleted ");
-    }
 
 
-    @Override
-    public List<AccountOperationDTO> getAccountOperationsHistory(String accountId){
-        List<AccountOperation> bankAccountOperations = operationRepository.findByBankAccountId(accountId);
-        List<AccountOperationDTO> accountOperationDTOS = bankAccountOperations.stream().map(accountOperation -> accountOperationMapper.fromAccountOperation(accountOperation)).collect(Collectors.toList());
-        return accountOperationDTOS;
-    }
 
-    @Override
-    public AccountHistoryDTO getAccountHistory(String accountId, int page, int size) throws BankAccountNotFoundExcetion {
-        BankAccount bankAccount = accountRepository.findById( accountId).orElseThrow( ()-> new BankAccountNotFoundExcetion("Bank account not Found !"));
-        Page<AccountOperation> accountOperations = operationRepository.findByBankAccountId(accountId, PageRequest.of(page, size));
 
-        AccountHistoryDTO accountHistoryDTO = new AccountHistoryDTO();
-        List<AccountOperationDTO> operations = accountOperations.getContent().stream().map( accountOperation -> accountOperationMapper.fromAccountOperation(accountOperation) ).collect(Collectors.toList());
-        accountHistoryDTO.setAccountOperationDTOS( operations );
-        accountHistoryDTO.setAccountId( bankAccount.getId() );
-        accountHistoryDTO.setBalance( bankAccount.getBalance() );
-        accountHistoryDTO.setPageSize( size );
-        accountHistoryDTO.setCurrentPage( page );
-        accountHistoryDTO.setTotalPages(accountOperations.getTotalPages() );
-        return accountHistoryDTO;
-    }
+
 }

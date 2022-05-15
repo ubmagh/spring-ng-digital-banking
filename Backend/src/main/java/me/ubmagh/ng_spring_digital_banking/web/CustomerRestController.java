@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.ubmagh.ng_spring_digital_banking.dtos.CustomerDTO;
 import me.ubmagh.ng_spring_digital_banking.exceptions.CustomerNotFoundException;
-import me.ubmagh.ng_spring_digital_banking.services.BankAccountService;
+import me.ubmagh.ng_spring_digital_banking.services.CustomerService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,32 +15,32 @@ import java.util.List;
 @RequestMapping("/api")
 public class CustomerRestController {
 
-    private BankAccountService bankAccountService;
+    private CustomerService customerService;
 
     @GetMapping("/customers")
     public List<CustomerDTO> getCustomers(){
-        return bankAccountService.listCustomers();
+        return customerService.listCustomers();
     }
 
     @GetMapping("/customers/{id}")
     public CustomerDTO getCustomer( @PathVariable(name="id") String customerId) throws CustomerNotFoundException {
-         return bankAccountService.getCustomer( customerId);
+         return customerService.getCustomer( customerId);
     }
 
     @PostMapping("/customers")
     public CustomerDTO saveCustomer( @RequestBody CustomerDTO request){
-        return bankAccountService.saveCustomer( request);
+        return customerService.saveCustomer( request);
     }
 
     @PutMapping("/customers/{id}")
     public CustomerDTO updateCustomer( @PathVariable(name="id") String customerId, @RequestBody CustomerDTO request) throws CustomerNotFoundException {
         request.setId( customerId);
-        return bankAccountService.updateCustomer( request);
+        return customerService.updateCustomer( request);
     }
 
     @DeleteMapping("/customers/{id}")
     public void deleteCustomer(@PathVariable(name="id") String customerId){
-        bankAccountService.deleteCustomer( customerId);
+        customerService.deleteCustomer( customerId);
     }
 
 }

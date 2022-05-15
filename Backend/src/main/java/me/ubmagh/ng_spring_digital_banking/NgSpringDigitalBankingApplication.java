@@ -12,6 +12,7 @@ import me.ubmagh.ng_spring_digital_banking.repositories.CustomerRepository;
 import me.ubmagh.ng_spring_digital_banking.repositories.AccountOperationRepository;
 import me.ubmagh.ng_spring_digital_banking.services.BankAccountService;
 import me.ubmagh.ng_spring_digital_banking.services.BankService;
+import me.ubmagh.ng_spring_digital_banking.services.CustomerService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -28,7 +29,10 @@ public class NgSpringDigitalBankingApplication {
 	}
 
 	// @Bean
-	CommandLineRunner fillDbUsingBAService(BankAccountService bankAccountService){
+	CommandLineRunner fillDbUsingBAService(
+			BankAccountService bankAccountService,
+			CustomerService customerService
+	){
 		return  args -> {
 			Faker faker = new Faker();
 
@@ -37,11 +41,11 @@ public class NgSpringDigitalBankingApplication {
 				customer.setId(UUID.randomUUID().toString());
 				customer.setName( faker.name().fullName() );
 				customer.setEmail( faker.internet().safeEmailAddress() );
-				bankAccountService.saveCustomer( customer );
+				customerService.saveCustomer( customer );
 			}
 
 
-			bankAccountService.listCustomers().forEach(customer -> {
+			customerService.listCustomers().forEach(customer -> {
 
 				try {
 					bankAccountService.saveCurrentBankAccount(
