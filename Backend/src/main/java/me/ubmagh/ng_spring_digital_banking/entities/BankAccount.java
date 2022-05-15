@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import me.ubmagh.ng_spring_digital_banking.enums.AccountStatus;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
 @Data
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type", length = 7, discriminatorType = DiscriminatorType.STRING)
-public class BankAccount {
+public class BankAccount { // this class should be abstract in case of  "table per class" strategy !!
 
     @Id
     private String id;
@@ -29,10 +30,10 @@ public class BankAccount {
     @ManyToOne
     private Customer customer;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private AccountStatus status;
 
-    @OneToMany(mappedBy = "bankAccount")
-    private List<Operation> accountOperations;
+    @OneToMany(mappedBy = "bankAccount", fetch = FetchType.LAZY)
+    private List<AccountOperation> accountAccountOperations = new ArrayList<>();
 
 }

@@ -14,9 +14,10 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Operation {
+public class AccountOperation {
 
     @Id
+    @GeneratedValue( strategy = GenerationType.IDENTITY)
     private long id;
 
     @Temporal(TemporalType.TIMESTAMP)
