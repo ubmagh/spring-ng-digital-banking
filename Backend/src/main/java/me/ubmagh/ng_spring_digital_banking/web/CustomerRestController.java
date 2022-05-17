@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Slf4j
 @RequestMapping("/api")
+@CrossOrigin("*")
 public class CustomerRestController {
 
     private CustomerService customerService;

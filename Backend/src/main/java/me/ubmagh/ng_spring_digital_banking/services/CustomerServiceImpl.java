@@ -8,6 +8,7 @@ import me.ubmagh.ng_spring_digital_banking.exceptions.CustomerNotFoundException;
 import me.ubmagh.ng_spring_digital_banking.mappers.CustomerMapper;
 import me.ubmagh.ng_spring_digital_banking.repositories.CustomerRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @Transactional
 @AllArgsConstructor
 @Slf4j
+@CrossOrigin("*")
 public class CustomerServiceImpl implements CustomerService {
 
     private CustomerRepository customerRepository;

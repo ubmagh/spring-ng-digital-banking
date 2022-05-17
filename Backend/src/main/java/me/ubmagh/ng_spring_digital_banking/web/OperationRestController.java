@@ -9,15 +9,13 @@ import me.ubmagh.ng_spring_digital_banking.exceptions.BalanceNotSufficientExcept
 import me.ubmagh.ng_spring_digital_banking.exceptions.BankAccountNotFoundExcetion;
 import me.ubmagh.ng_spring_digital_banking.services.AccountOperationService;
 import me.ubmagh.ng_spring_digital_banking.services.BankAccountService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
 @Slf4j
 @RequestMapping("/api")
+@CrossOrigin("*")
 public class OperationRestController {
 
 
