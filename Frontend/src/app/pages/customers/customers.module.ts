@@ -6,11 +6,13 @@ import { CustomersRoutingModule } from './customers-routing.module';
 import { CustomersComponent } from './customers.component';
 import { CustomerService } from 'src/app/services/customer.service';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NewCustomerComponent } from './new-customer/new-customer.component';
 
 
 @NgModule({
   declarations: [
-    CustomersComponent
+    CustomersComponent,
+    NewCustomerComponent
   ],
   imports: [
     CommonModule,

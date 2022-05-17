@@ -1,32 +1,75 @@
 <div class="border-end border-dark bg-dark" id="sidebar-wrapper">
-    <div class="list-group">
-      <div class="d-flex flex-column flex-shrink-0 text-white bg-dark">
-        <a href="https://github.com/ubmagh/spring-ng-digital-banking" target="_blank" class="d-flex align-items-center mb-3 mb-md-0  text-white text-decoration-none mx-auto">
-          <span class="fs-4 sidebar-heading"> 
-            <i class="bi bi-github" style="font-size: 2.2rem;"></i>
-          </span>
-        </a>
-        <hr>
-        <ul class="nav nav-pills flex-column mb-auto">
-          <li class="nav-item">
-            <a routerLink="/" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="active" class="nav-link text-white" aria-current="page">
-              <i class="bi bi-house"></i>
-              Home
-            </a>
-          </li>
-          <li class="nav-item">
-            <a routerLink="/customers" routerLinkActive="active" class="nav-link text-white">
-              <i class="bi bi-people"></i>
-              Customers
-            </a>
-          </li>
-          <li class="nav-item">
-            <a routerLink="/accounts" routerLinkActive="active" class="nav-link text-white">
-              <i class="bi bi-person-lines-fill"></i>
-              Accounts
-            </a>
-          </li>
-        </ul>
-      </div>
+  <div class="list-group">
+    <div class="d-flex flex-column flex-shrink-0 text-white bg-dark">
+      <a
+        href="https://github.com/ubmagh/spring-ng-digital-banking"
+        target="_blank"
+        class="d-flex align-items-center mb-3 mb-md-0 text-white text-decoration-none mx-auto"
+      >
+        <span class="fs-4 sidebar-heading">
+          <i class="bi bi-github" style="font-size: 2.2rem"></i>
+        </span>
+      </a>
+      <hr />
+      <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+          <a
+            routerLink="/"
+            [routerLinkActiveOptions]="{ exact: true }"
+            routerLinkActive="active"
+            class="nav-link text-white"
+            aria-current="page"
+          >
+            <i class="bi bi-house"></i>
+            Home
+          </a>
+        </li>
+        <li class="mb-1 text-white">
+          <button
+            class="nav-link text-white btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+            data-bs-toggle="collapse"
+            data-bs-target="#customers-collapse"
+            aria-expanded="true"
+          >
+            Costumers
+          </button>
+          <div class="collapse show" id="customers-collapse">
+            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+              <li class="nav-item">
+                <a
+                  routerLink="/customers"
+                  routerLinkActive="active"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  class="nav-link text-white text-decoration-none rounded ps-5"
+                >
+                  <i class="bi bi-people"></i>
+                  List of customers
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  routerLink="/customers/new"
+                  routerLinkActive="active"
+                  class="nav-link text-white text-decoration-none rounded ps-5"
+                >
+                  <i class="bi bi-plus-circle"></i>
+                  Add new customer
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a
+            routerLink="/accounts"
+            routerLinkActive="active"
+            class="nav-link text-white"
+          >
+            <i class="bi bi-person-lines-fill"></i>
+            Accounts
+          </a>
+        </li>
+      </ul>
     </div>
   </div>
+</div>

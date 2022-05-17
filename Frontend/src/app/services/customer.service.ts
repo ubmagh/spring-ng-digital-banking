@@ -24,4 +24,8 @@ export class CustomerService {
     });
   }
 
+  public saveCustomer( customer :Customer): Observable<Customer> {
+    return this.http.post<Customer>(environment.backendUrl+"/api/customers", customer);
+  } 
+
 }

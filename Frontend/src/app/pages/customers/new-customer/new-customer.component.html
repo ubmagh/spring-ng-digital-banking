@@ -1,0 +1,111 @@
+<div class="card bg-dark text-light mb-3">
+  <div class="card-header">
+    <h2 class="h2 py-2 fw-light text-center">Add new customer</h2>
+  </div>
+  <div class="card-body mycard">
+    <form
+      [formGroup]="form"
+      class="col-md-8 col-lg-7 mx-auto"
+      (ngSubmit)="handleCustomerCreate()"
+    >
+      <div class="mb-3">
+        <label for="name" class="form-label">Name :</label>
+        <input
+          type="text"
+          formControlName="name"
+          [class.is-valid]="
+            form.get('name')!.valid &&
+            (form.get('name')!.dirty || form.get('name')!.touched)
+          "
+          [class.is-invalid]="
+            form.get('name')!.invalid &&
+            (form.get('name')!.dirty || form.get('name')!.touched)
+          "
+          class="form-control"
+          id="name"
+        />
+        <ng-container *ngIf="form.get('name')!.touched">
+          <small
+            class="text-danger d-block"
+            *ngIf="form.get('name')!.hasError('required')"
+          >
+            🎃 cutomer name is required
+          </small>
+          <small
+            class="text-danger d-block"
+            *ngIf="form.get('name')!.hasError('minlength')"
+          >
+            🎃 cutomer name should be at least 6 characters long
+          </small>
+        </ng-container>
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label">Email address</label>
+        <input
+          type="email"
+          formControlName="email"
+          class="form-control"
+          id="email"
+          [class.is-valid]="
+            form.get('email')!.valid &&
+            (form.get('email')!.dirty || form.get('email')!.touched)
+          "
+          [class.is-invalid]="
+            form.get('email')!.invalid &&
+            (form.get('email')!.dirty || form.get('email')!.touched)
+          "
+          class="form-control"
+          id="email"
+        />
+        <ng-container *ngIf="form.get('email')!.touched">
+          <small
+            class="text-danger d-block"
+            *ngIf="form.get('email')!.hasError('required')"
+          >
+            🎃 cutomer email is required
+          </small>
+          <small
+            class="text-danger d-block"
+            *ngIf="form.get('email')!.hasError('email')"
+          >
+            🎃 invalid email address
+          </small>
+        </ng-container>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-outline-success mb-3 mt-2 d-block mx-auto"
+        [disabled]="!form.valid"
+      >
+        <i class="bi bi-plus-circle"></i>
+        Create
+      </button>
+    </form>
+  </div>
+</div>
+
+<div class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3">
+  <div
+    id="liveToast"
+    class="toast"
+    role="alert"
+    aria-live="assertive"
+    aria-atomic="true"
+  >
+    <div class="toast-header">
+      <img src="..." class="rounded me-2" alt="..." />
+      <strong class="me-auto">Bootstrap</strong>
+      <small>11 mins ago</small>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="toast"
+        aria-label="Close"
+      ></button>
+    </div>
+    <div class="toast-body">Hello, world! This is a toast message.</div>
+  </div>
+</div>
+
