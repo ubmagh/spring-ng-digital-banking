@@ -80,7 +80,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<CustomerDTO> searchCustomer( String searchKeyword){
-        List<Customer> customerList = customerRepository.findAllByNameContains(searchKeyword);
+        List<Customer> customerList = customerRepository.searchCustomerByName("%"+searchKeyword+"%");
 
         return customerList.stream().map( customer -> customerMapper.fromCustomer( customer))
                 .collect(Collectors.toList());
