@@ -22,7 +22,7 @@ public interface BankAccountService {
 
     void debit( String accountId, double amount, String description) throws BankAccountNotFoundExcetion, BalanceNotSufficientException;
 
-    void credit( String accountId, double amount, String description) throws BankAccountNotFoundExcetion, BalanceNotSufficientException;
+    void credit( String accountId, double amount, String description) throws BankAccountNotFoundExcetion;
 
     void transfer( String accountSourceId, String accountDestinationId, double amount) throws BankAccountNotFoundExcetion, BalanceNotSufficientException;
 

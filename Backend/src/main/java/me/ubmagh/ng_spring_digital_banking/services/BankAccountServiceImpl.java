@@ -105,7 +105,7 @@ public class BankAccountServiceImpl implements BankAccountService {
     }
 
     @Override
-    public void credit(String accountId, double amount, String description) throws BankAccountNotFoundExcetion, BalanceNotSufficientException {
+    public void credit(String accountId, double amount, String description) throws BankAccountNotFoundExcetion {
         BankAccount bankAccount = accountRepository.findById( accountId ).orElseThrow(() -> new BankAccountNotFoundExcetion("Bank account not found !"));
         log.info("⏳ crediting bank account ...");
 
