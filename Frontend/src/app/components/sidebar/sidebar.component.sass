@@ -1,0 +1,27 @@
+#sidebar-wrapper 
+    min-height: 100vh
+    margin-left: -15rem
+    transition: margin 0.25s ease-out
+    .sidebar-heading 
+        padding: 1.3rem 1.25rem 0.95rem 1.25rem
+        font-size: 1.2rem
+    .list-group
+        width: 15rem
+
+
+    
+body.sb-sidenav-toggled 
+    #wrapper 
+        #sidebar-wrapper
+            margin-left: 0
+
+                
+@media (min-width: 768px) 
+    #sidebar-wrapper 
+        margin-left: 0
+
+    body.sb-sidenav-toggled #wrapper #sidebar-wrapper 
+        margin-left: -15rem
+
+.nav-item
+    margin-top: 10px !important

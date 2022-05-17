@@ -1,0 +1,32 @@
+<div class="border-end border-dark bg-dark" id="sidebar-wrapper">
+    <div class="list-group">
+      <div class="d-flex flex-column flex-shrink-0 text-white bg-dark">
+        <a href="https://github.com/ubmagh/spring-ng-digital-banking" target="_blank" class="d-flex align-items-center mb-3 mb-md-0  text-white text-decoration-none mx-auto">
+          <span class="fs-4 sidebar-heading"> 
+            <i class="bi bi-github" style="font-size: 2.2rem;"></i>
+          </span>
+        </a>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+          <li class="nav-item">
+            <a routerLink="/" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="active" class="nav-link text-white" aria-current="page">
+              <i class="bi bi-house"></i>
+              Home
+            </a>
+          </li>
+          <li class="nav-item">
+            <a routerLink="/customers" routerLinkActive="active" class="nav-link text-white">
+              <i class="bi bi-people"></i>
+              Customers
+            </a>
+          </li>
+          <li class="nav-item">
+            <a routerLink="/accounts" routerLinkActive="active" class="nav-link text-white">
+              <i class="bi bi-person-lines-fill"></i>
+              Accounts
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
