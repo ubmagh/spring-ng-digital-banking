@@ -44,7 +44,7 @@ export class NewCustomerComponent implements OnInit {
     }
     this.customerService.saveCustomer( customer).subscribe( {
       next: data=>{
-        this.toastr.success( '', 'Customer added successfully!', { closeButton: true, positionClass: "toast-top-center", });
+        this.toastr.success( '', 'Customer added successfully!', { closeButton: true, positionClass: "toast-top-center" });
         this.form.reset();
       },
       error: err=>{

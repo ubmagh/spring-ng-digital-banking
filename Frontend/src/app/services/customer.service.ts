@@ -28,4 +28,8 @@ export class CustomerService {
     return this.http.post<Customer>(environment.backendUrl+"/api/customers", customer);
   } 
 
+  public deleteCustomer( customerid :string ){
+    return this.http.delete(environment.backendUrl+"/api/customers/"+customerid );
+  }
+
 }

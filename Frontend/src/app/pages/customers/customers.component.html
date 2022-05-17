@@ -30,6 +30,7 @@
                         <th> ID </th>
                         <th> Name </th>
                         <th> Email </th>
+                        <th> <strong>Actions</strong> </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,9 +38,12 @@
                         <td> {{ customer.id }} </td>
                         <td> {{ customer.name }} </td>
                         <td> {{ customer.email }} </td>
+                        <td> 
+                            <button class="btn btn-outline-danger" title="delete" (click)="handleDeleteCustomer( customer)" > <i class="bi bi-trash3"></i> </button>
+                        </td>
                     </tr>
                     <tr *ngIf="customersList.length==0" >
-                        <td colspan="3"> <strong> No costumer found </strong> </td>
+                        <td colspan="4"> <strong> No costumer found </strong> </td>
                     </tr>
                 </tbody>
             </table>
@@ -69,3 +73,29 @@
 
     </div>
 </div>
+
+
+<div class="mdc-dialog">
+    <div class="mdc-dialog__container">
+      <div class="mdc-dialog__surface"
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="my-dialog-title"
+        aria-describedby="my-dialog-content">
+        <div class="mdc-dialog__content" id="my-dialog-content">
+          Are you sure ?
+        </div>
+        <div class="mdc-dialog__actions">
+          <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="delete">
+            <div class="mdc-button__ripple"></div>
+            <span class="mdc-button__label">Delete it</span>
+          </button>
+          <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="discard">
+            <div class="mdc-button__ripple"></div>
+            <span class="mdc-button__label">Discard</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="mdc-dialog__scrim"></div>
+  </div>

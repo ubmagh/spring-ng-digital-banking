@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
-import { catchError, Observable, tap, throwError } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+import { catchError, map, Observable, tap, throwError } from 'rxjs';
 import { Customer } from 'src/app/models/customer.model';
 import { CustomerService } from 'src/app/services/customer.service';
+import { MDCDialog } from '@material/dialog';
 
 @Component({
   selector: 'app-customers',
@@ -19,7 +21,8 @@ export class CustomersComponent implements OnInit {
   constructor( 
     private titleService :Title,
     private customerService:CustomerService,
-    private fb:FormBuilder
+    private fb:FormBuilder,
+    private toastrService: ToastrService
     ) { 
 
     titleService.setTitle("Ebank- Customers");
@@ -60,6 +63,39 @@ export class CustomersComponent implements OnInit {
     )
   }
 
+  handleDeleteCustomer( customer:Customer){
 
+    const dialog = new MDCDialog(document.querySelector('.mdc-dialog')!);
+    
+    dialog.open();
+
+    dialog.listen('MDCDialog:closed', (e:any)=>{
+      if(e.detail.action=="delete"){
+
+        this.customerService.deleteCustomer(customer.id).subscribe({
+          next: any=>{
+            this.toastrService.success("","Customer deleted successfully !", { closeButton: true, positionClass: "toast-top-center", })
+            // this.handleSearchSubmit();
+            // instead of loading data again, we can simply let the the browser do the work !
+            this.customers = this.customers.pipe(
+              map(data=>{
+                let index = data.indexOf(customer)
+                data.slice( index, 1);
+                return data;
+              })
+            )
+          },
+          error: err=>{
+            this.toastrService.error("","Can't delete customer, could still have an account !", { closeButton: true, positionClass: "toast-top-center", })
+            console.error(err.message)
+          }
+        });
+
+
+      }
+    });
+
+    
+  }
 
 }
