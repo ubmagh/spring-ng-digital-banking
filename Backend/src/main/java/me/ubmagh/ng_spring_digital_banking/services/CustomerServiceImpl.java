@@ -76,5 +76,13 @@ public class CustomerServiceImpl implements CustomerService {
         log.info("✔ customer deleted ");
     }
 
+    @Override
+    public List<CustomerDTO> searchCustomer( String searchKeyword){
+        List<Customer> customerList = customerRepository.findAllByNameContains(searchKeyword);
+
+        return customerList.stream().map( customer -> customerMapper.fromCustomer( customer))
+                .collect(Collectors.toList());
+    }
+
 
 }

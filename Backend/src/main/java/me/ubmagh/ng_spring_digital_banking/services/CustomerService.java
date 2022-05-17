@@ -20,5 +20,6 @@ public interface CustomerService {
 
     void deleteCustomer(String customerId);
 
+    List<CustomerDTO> searchCustomer( String searchKeyword);
 
 }
