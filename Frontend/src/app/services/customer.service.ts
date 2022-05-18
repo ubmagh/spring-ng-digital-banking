@@ -32,4 +32,12 @@ export class CustomerService {
     return this.http.delete(environment.backendUrl+"/api/customers/"+customerid );
   }
 
+  public getCustomer( customerId:string) : Observable<Customer>{
+    return this.http.get<Customer>(environment.backendUrl+"/api/customers/"+customerId );
+  }
+
+  public updateCustomer( customerId:string, customer:Customer) : Observable<Customer>{
+    return this.http.put<Customer>(environment.backendUrl+"/api/customers/"+customerId, customer );
+  }
+
 }

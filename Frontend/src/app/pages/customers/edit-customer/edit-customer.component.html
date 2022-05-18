@@ -1,0 +1,64 @@
+<div class="card bg-dark text-light mb-3">
+    <div class="card-header">
+        <h2 class="h2 py-2 fw-light text-center">Edit a customer</h2>
+    </div>
+    <div class="card-body">
+
+        <ng-container *ngIf="errorMessage.length>0; else gotIt" >
+            
+            <div class="alert alert-warning mx-4" role="alert">
+                <h4 class="alert-heading text-center display-2"> <i class="bi bi-exclamation-diamond"></i> </h4>
+                <h2 class="h2 text-center fw-light"> Customer not found ! </h2>
+                <hr>
+                <p> {{ errorMessage }} </p>
+            </div>
+
+        </ng-container>
+        <ng-template #gotIt>
+        <form [formGroup]="form" class="col-md-8 col-lg-7 mx-auto" (ngSubmit)="handleCustomerUpdate()">
+            <div class="mb-3">
+                <label for="name" class="form-label">Name :</label>
+                <input type="text" formControlName="name" [class.is-valid]="
+            form.get('name')!.valid &&
+            (form.get('name')!.dirty || form.get('name')!.touched)
+          " [class.is-invalid]="
+            form.get('name')!.invalid &&
+            (form.get('name')!.dirty || form.get('name')!.touched)
+          " class="form-control" id="name" />
+                <ng-container *ngIf="form.get('name')!.touched">
+                    <small class="text-danger d-block" *ngIf="form.get('name')!.hasError('required')">
+                        🎃 cutomer name is required
+                    </small>
+                    <small class="text-danger d-block" *ngIf="form.get('name')!.hasError('minlength')">
+                        🎃 cutomer name should be at least 6 characters long
+                    </small>
+                </ng-container>
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email address</label>
+                <input type="email" formControlName="email" class="form-control" id="email" [class.is-valid]="
+            form.get('email')!.valid &&
+            (form.get('email')!.dirty || form.get('email')!.touched)
+          " [class.is-invalid]="
+            form.get('email')!.invalid &&
+            (form.get('email')!.dirty || form.get('email')!.touched)
+          " class="form-control" id="email" />
+                <ng-container *ngIf="form.get('email')!.touched">
+                    <small class="text-danger d-block" *ngIf="form.get('email')!.hasError('required')">
+                        🎃 cutomer email is required
+                    </small>
+                    <small class="text-danger d-block" *ngIf="form.get('email')!.hasError('email')">
+                        🎃 invalid email address
+                    </small>
+                </ng-container>
+            </div>
+
+            <button type="submit" class="btn btn-outline-success mb-3 mt-2 d-block mx-auto" [disabled]="!form.valid">
+                <i class="bi bi-pen"></i>
+                Save
+            </button>
+        </form>
+    </ng-template>
+    </div>
+</div>

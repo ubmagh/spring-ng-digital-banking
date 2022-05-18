@@ -24,7 +24,7 @@
     <div class="card-body mycard">
 
         <ng-container *ngIf="customers|async as customersList; else loadingOrFailure">
-            <table class="table table-dark table-hover text-center">
+            <table class="table table-dark table-hover text-center align-middle">
                 <thead>
                     <tr>
                         <th> ID </th>
@@ -39,7 +39,8 @@
                         <td> {{ customer.name }} </td>
                         <td> {{ customer.email }} </td>
                         <td> 
-                            <button class="btn btn-outline-danger" title="delete" (click)="handleDeleteCustomer( customer)" > <i class="bi bi-trash3"></i> </button>
+                            <a class="btn btn-outline-info me-1" [routerLink]="['edit', customer.id]" title="edit"> <i class="bi bi-pencil-square"></i> </a>
+                            <button class="btn btn-outline-danger ms-1" title="delete" (click)="handleDeleteCustomer( customer)" > <i class="bi bi-trash3"></i> </button>
                         </td>
                     </tr>
                     <tr *ngIf="customersList.length==0" >
