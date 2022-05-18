@@ -1,5 +1,6 @@
 package me.ubmagh.ng_spring_digital_banking.services;
 
+import me.ubmagh.ng_spring_digital_banking.dtos.CustomerAccountsDTO;
 import me.ubmagh.ng_spring_digital_banking.dtos.CustomerDTO;
 import me.ubmagh.ng_spring_digital_banking.entities.Customer;
 import me.ubmagh.ng_spring_digital_banking.exceptions.CustomerNotFoundException;
@@ -22,4 +23,6 @@ public interface CustomerService {
 
     List<CustomerDTO> searchCustomer( String searchKeyword);
 
+
+    CustomerAccountsDTO getCustomerAccounts(String customerId, int page, int size) throws CustomerNotFoundException;
 }

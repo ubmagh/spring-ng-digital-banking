@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { CustomerAccountResponse } from '../models/account.model';
 import { Customer } from '../models/customer.model';
 
 @Injectable()
@@ -38,6 +39,15 @@ export class CustomerService {
 
   public updateCustomer( customerId:string, customer:Customer) : Observable<Customer>{
     return this.http.put<Customer>(environment.backendUrl+"/api/customers/"+customerId, customer );
+  }
+
+  public getCustomerAccounts( customerId:string, page:number, size:number) :Observable<CustomerAccountResponse>{
+    return this.http.get<CustomerAccountResponse>(environment.backendUrl+"/api/customers/"+customerId+"/accounts",{
+      params: { 
+        page : page-1,
+        size
+      }
+    });
   }
 
 }

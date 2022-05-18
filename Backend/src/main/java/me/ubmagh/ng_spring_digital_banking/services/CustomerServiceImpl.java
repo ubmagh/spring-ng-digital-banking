@@ -2,11 +2,19 @@ package me.ubmagh.ng_spring_digital_banking.services;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.ubmagh.ng_spring_digital_banking.dtos.CustomerAccountsDTO;
 import me.ubmagh.ng_spring_digital_banking.dtos.CustomerDTO;
+import me.ubmagh.ng_spring_digital_banking.entities.BankAccount;
+import me.ubmagh.ng_spring_digital_banking.entities.CurrentAccount;
 import me.ubmagh.ng_spring_digital_banking.entities.Customer;
+import me.ubmagh.ng_spring_digital_banking.entities.SavingAccount;
 import me.ubmagh.ng_spring_digital_banking.exceptions.CustomerNotFoundException;
+import me.ubmagh.ng_spring_digital_banking.mappers.BankAccountMapper;
 import me.ubmagh.ng_spring_digital_banking.mappers.CustomerMapper;
+import me.ubmagh.ng_spring_digital_banking.repositories.BankAccountRepository;
 import me.ubmagh.ng_spring_digital_banking.repositories.CustomerRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
@@ -25,6 +33,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     private CustomerRepository customerRepository;
     private CustomerMapper customerMapper;
+    private BankAccountRepository accountRepository;
+    private BankAccountMapper bankAccountMapper;
 
 
     @Override
@@ -84,6 +94,26 @@ public class CustomerServiceImpl implements CustomerService {
 
         return customerList.stream().map( customer -> customerMapper.fromCustomer( customer))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public CustomerAccountsDTO getCustomerAccounts(String customerId, int page, int size) throws CustomerNotFoundException {
+        this.getCustomer(customerId); // throws exception if not found
+        Page<BankAccount> customerAccounts = accountRepository.getCustomerAccounts(customerId, PageRequest.of(page, size));
+
+        CustomerAccountsDTO dto = new CustomerAccountsDTO();
+        dto.setCustomerId( customerId );
+        dto.setCurrentPage( page);
+        dto.setTotalPages( customerAccounts.getTotalPages() );
+        dto.setPageSize(size);
+        dto.setAccounts(
+                customerAccounts.getContent().stream().map( bankAccount -> {
+                    if (bankAccount instanceof SavingAccount)
+                        return bankAccountMapper.fromSavingAccount((SavingAccount) bankAccount);
+                    return bankAccountMapper.fromCurrentAccount((CurrentAccount) bankAccount);
+                }).collect(Collectors.toList())
+        );
+        return dto;
     }
 
 

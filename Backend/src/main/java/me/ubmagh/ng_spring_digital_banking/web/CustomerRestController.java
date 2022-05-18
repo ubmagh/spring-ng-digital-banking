@@ -2,6 +2,7 @@ package me.ubmagh.ng_spring_digital_banking.web;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.ubmagh.ng_spring_digital_banking.dtos.CustomerAccountsDTO;
 import me.ubmagh.ng_spring_digital_banking.dtos.CustomerDTO;
 import me.ubmagh.ng_spring_digital_banking.exceptions.CustomerNotFoundException;
 import me.ubmagh.ng_spring_digital_banking.services.CustomerService;
@@ -47,6 +48,14 @@ public class CustomerRestController {
     @DeleteMapping("/customers/{id}")
     public void deleteCustomer(@PathVariable(name="id") String customerId){
         customerService.deleteCustomer( customerId);
+    }
+
+    @GetMapping("/customers/{id}/accounts")
+    public CustomerAccountsDTO getCustomer(@PathVariable(name="id") String customerId,
+                                           @RequestParam(name = "page", defaultValue = "0") int page,
+                                           @RequestParam(name = "size", defaultValue = "10") int size)
+            throws CustomerNotFoundException {
+        return customerService.getCustomerAccounts( customerId, page, size);
     }
 
 }

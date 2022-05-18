@@ -1,1 +1,36 @@
-<p>accounts works!</p>
+<div
+  class="accordion accordion-bg-dark bg-dark mt-0 pt-0 mb-2"
+  id="accordionPanelsStayOpenExample"
+>
+  <div class="accordion-item bg-dark text-white">
+    <h2 class="accordion-header bg-dark" id="panelsStayOpen-headingOne">
+      <button
+        class="accordion-button bg-dark text-white"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#panelsStayOpen-collapseOne"
+        aria-expanded="true"
+        aria-controls="panelsStayOpen-collapseOne"
+      >
+        How it works ?
+      </button>
+    </h2>
+    <div
+      id="panelsStayOpen-collapseOne"
+      class="accordion-collapse collapse show"
+      data-bs-toggle="collapse"
+      aria-labelledby="panelsStayOpen-headingOne"
+    >
+      <div class="accordion-body bg-dark text-light">
+        <ul>
+          <li>search and choose a customer</li>
+          <li>then you can see his accounts down below</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-customers-card [selectedCustomerSubject]="selectedCustomerId"></app-customers-card>
+
+<app-accounts-card [customerIdObs]="selectedCustomerId.asObservable()" ></app-accounts-card>
