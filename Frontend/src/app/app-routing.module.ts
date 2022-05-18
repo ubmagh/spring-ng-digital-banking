@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { Error404Component } from './pages/error404/error404.component';
 
 const routes: Routes = [
   {
@@ -13,6 +14,10 @@ const routes: Routes = [
   {
     path: "customers",
     loadChildren: ()=>import("./pages/customers/customers.module").then(e=>e.CustomersModule)
+  },
+  {
+    path: "**",
+    component: Error404Component  
   }
 ];
 
