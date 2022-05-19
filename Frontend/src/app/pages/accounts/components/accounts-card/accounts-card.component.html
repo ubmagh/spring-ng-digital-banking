@@ -18,18 +18,21 @@
                 <ng-container *ngIf="customerId.length > 0; else chooseCustomer">
                     <div class="customerAccordioBody">
                         <ng-container *ngIf="accounts; else loadingOrFailure">
-                            <div class="alert alert-primary text-center" role="alert">
-                                Selected customer : <strong> {{ customer?.name }} </strong>, his
-                                accounts list :
+                            <div class="row w-100">
+                                <div class="alert alert-primary text-center col" role="alert">
+                                    Selected customer : <strong> {{ customer?.name }} </strong>, his
+                                    accounts list :
+                                </div>
+    
+                                <div class="w-100 text-center col">
+                                    <button class="btn btn-outline-success d-block ms-auto mt-2" data-bs-toggle="modal"
+                                        data-bs-target="#staticBackdrop">
+                                        <i class="bi bi-plus-square"></i>
+                                        create an account for current customer
+                                    </button>
+                                </div>
                             </div>
-
-                            <div class="w-100 text-center">
-                                <button class="btn btn-outline-success d-block mx-auto" data-bs-toggle="modal"
-                                    data-bs-target="#staticBackdrop">
-                                    <i class="bi bi-plus-square"></i>
-                                    create an account for current customer
-                                </button>
-                            </div>
+                            
 
                             <table class="table table-dark table-hover text-center align-middle"
                                 style="overflow-y: auto; position: relative">
@@ -41,6 +44,7 @@
                                         <th>Opened at</th>
                                         <th>Status</th>
                                         <th>Other information 🤔</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -54,15 +58,21 @@
                                         <td>{{ account.status }}</td>
                                         <td>
                                             <ng-container *ngIf="
-                          account.type == 'SavingAccount';
-                          else currentAccountMsg
-                        ">
-                                                <strong> interest rate : </strong>
-                                                {{ account.interestRate }}
+                                                account.type == 'SavingAccount';
+                                                else currentAccountMsg
+                                                ">
+                                                <span class="badge text-bg-primary"> 
+                                                         interest rate : 
+                                                    {{ account.interestRate }}
+                                                </span>
                                             </ng-container>
                                             <ng-template #currentAccountMsg>
-                                                <strong> overDraft : </strong> {{ account.overDraft }}
+                                                <span class="badge text-bg-secondary"> overDraft : {{ account.overDraft }} </span>
                                             </ng-template>
+                                        </td>
+                                        <td> 
+                                            <button class="btn btn-outline-info me-1"  title="edit" (click)="openEditModal( account)"> <i class="bi bi-pencil-square"></i> </button>
+                                            <button class="btn btn-outline-danger ms-1" title="delete" (click)="confirmDelete( account )" > <i class="bi bi-trash3"></i> </button>
                                         </td>
                                     </tr>
                                     <tr *ngIf="accounts.length == 0">
@@ -137,7 +147,7 @@
     </div>
 </div>
 
-<!-- Modal -->
+<!-- create Modal -->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -256,6 +266,114 @@
                     </button>
                     <button type="submit" class="btn btn-success" [disabled]="!createForm.valid || submitting">
                         <i class="bi bi-plus-square"></i> create
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+<!-- Button trigger modal -->
+<button type="button" class="d-none btn btn-primary" id="toggleEditModalBtn" data-bs-toggle="modal" data-bs-target="#editStaticBackdrop">
+    😅😅
+</button>
+<!-- edit Modal -->
+<div class="modal fade" id="editStaticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="editStaticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-dark text-white">
+            <form [formGroup]="editForm" (ngSubmit)="handleditFormSubmit()">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editStaticBackdropLabel">
+                        Edit an account
+                    </h5>
+                    <button type="button" class="btn-close text-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-3">
+                    <div class="mb-3 row col-10 mx-auto">
+                        <div class="mb-3">
+                            <label for="cutomerName2" class="form-label">
+                                Current editted account :
+                            </label>
+                            <input type="text" class="form-control text-center bg-dark border border-white text-white"
+                                [disabled]="true" id="cutomerName2" [value]="customer?.name" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="accountStatus" class="form-label mb-1">
+                                Account status :
+                            </label>
+                            <select class="form-select" id="accountStatus" formControlName="status" aria-label="Default select example">
+                                <option value="CREATED">Created</option>
+                                <option value="ACTIVATED">Activated</option>
+                                <option value="SUSPENDED">Suspended</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3" *ngIf="edittedAccount?.type == 'SavingAccount'">
+                            <label for="interestRate" class="form-label">
+                                Interest rate :
+                            </label>
+                            <input type="text" class="form-control" id="interestRate" [class.is-valid]="
+                  editForm.get('interestRate')!.valid &&
+                  (editForm.get('interestRate')!.dirty ||
+                    editForm.get('interestRate')!.touched)
+                " [class.is-invalid]="
+                  editForm.get('interestRate')!.invalid &&
+                  (editForm.get('interestRate')!.dirty ||
+                    editForm.get('interestRate')!.touched)
+                " formControlName="interestRate" />
+                            <ng-container *ngIf="editForm.get('interestRate')!.touched">
+                                <small class="text-danger d-block"
+                                    *ngIf="editForm.get('interestRate')!.hasError('required')">
+                                    💸 Interest rate balance is required !
+                                </small>
+                                <small class="text-danger d-block"
+                                    *ngIf="editForm.get('interestRate')!.hasError('min')">
+                                    💸 invalude rate (%)
+                                </small>
+                                <small class="text-danger d-block"
+                                    *ngIf="editForm.get('interestRate')!.hasError('max')">
+                                    💸 invalude rate (%)
+                                </small>
+                            </ng-container>
+                        </div>
+
+                        <div class="mb-3" *ngIf="edittedAccount?.type == 'CurrentAccount'">
+                            <label for="overDraft" class="form-label"> Over draft : </label>
+                            <input type="text" class="form-control" id="overDraft" [class.is-valid]="
+                  editForm.get('overDraft')!.valid &&
+                  (editForm.get('overDraft')!.dirty ||
+                    editForm.get('overDraft')!.touched)
+                " [class.is-invalid]="
+                  editForm.get('overDraft')!.invalid &&
+                  (editForm.get('overDraft')!.dirty ||
+                    editForm.get('overDraft')!.touched)
+                " formControlName="overDraft" />
+                            <ng-container *ngIf="editForm.get('overDraft')!.touched">
+                                <small class="text-danger d-block"
+                                    *ngIf="editForm.get('overDraft')!.hasError('required')">
+                                    💸 OverDraft balance is required !
+                                </small>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeModal2">
+                        <i class="bi bi-x-circle"></i> Close
+                    </button>
+                    <button type="submit" class="btn btn-success" [disabled]="!editForm.valid || submitting">
+                        <i class="bi bi-box-arrow-down"></i> Save
                     </button>
                 </div>
             </form>

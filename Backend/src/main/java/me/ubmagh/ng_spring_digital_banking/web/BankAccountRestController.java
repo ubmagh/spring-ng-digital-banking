@@ -26,20 +26,19 @@ public class BankAccountRestController {
     private BankAccountMapper bankAccountMapper;
 
 
-
     @GetMapping("/accounts/{accountId}")
-    public BankAccountDTO getBankAccount( @PathVariable("accountId") String accountId) throws BankAccountNotFoundExcetion {
-        return bankAccountService.getBankAccount( accountId);
+    public BankAccountDTO getBankAccount(@PathVariable("accountId") String accountId) throws BankAccountNotFoundExcetion {
+        return bankAccountService.getBankAccount(accountId);
     }
 
     @GetMapping("/accounts")
-    public List<BankAccountDTO> accountsList( ){
+    public List<BankAccountDTO> accountsList() {
         return bankAccountService.listBankAccountDto();
     }
 
     @GetMapping("/accounts/{accountId}/operations")
-    public List<AccountOperationDTO> getHistory( @PathVariable("accountId") String accountId ){
-        return operationService.getAccountOperationsHistory( accountId);
+    public List<AccountOperationDTO> getHistory(@PathVariable("accountId") String accountId) {
+        return operationService.getAccountOperationsHistory(accountId);
     }
 
     @GetMapping("/accounts/{accountId}/paginateOperations")
@@ -48,21 +47,21 @@ public class BankAccountRestController {
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "10") int size
     ) throws BankAccountNotFoundExcetion {
-        return operationService.getAccountHistory( accountId, page, size);
+        return operationService.getAccountHistory(accountId, page, size);
     }
 
     @PostMapping("/accounts")
     public BankAccountDTO saveBankAccount(@RequestBody BankAccountRequestDTO accountRequestDTO) throws CustomerNotFoundException {
         BankAccountDTO dto;
-        if( accountRequestDTO.getType().equals("SavingAccount") ) {
-            this.customerService.getCustomer( accountRequestDTO.getCustomer().getId() );
+        if (accountRequestDTO.getType().equals("SavingAccount")) {
+            this.customerService.getCustomer(accountRequestDTO.getCustomer().getId());
             dto = bankAccountService.saveSavingBankAccount(
-                        accountRequestDTO.getBalance(),
-                        accountRequestDTO.getInterestRate(),
-                        accountRequestDTO.getCustomer().getId()
-                    );
-        }else{
-            this.customerService.getCustomer( accountRequestDTO.getCustomer().getId() );
+                    accountRequestDTO.getBalance(),
+                    accountRequestDTO.getInterestRate(),
+                    accountRequestDTO.getCustomer().getId()
+            );
+        } else {
+            this.customerService.getCustomer(accountRequestDTO.getCustomer().getId());
             dto = bankAccountService.saveCurrentBankAccount(
                     accountRequestDTO.getBalance(),
                     accountRequestDTO.getOverDraft(),
@@ -70,6 +69,19 @@ public class BankAccountRestController {
             );
         }
         return dto;
+    }
+
+    @PutMapping("/accounts/{id}")
+    public BankAccountDTO updateBankAccount(@PathVariable(name = "id") String accountId, @RequestBody BankAccountRequestDTO accountRequestDTO) throws BankAccountNotFoundExcetion {
+        accountRequestDTO.setId(accountId);
+        if (accountRequestDTO.getType().equals("SavingAccount"))
+            return bankAccountService.updateSavingBankAccount(
+                    bankAccountMapper.savingAccountFromBankAccountRequestDto(accountRequestDTO)
+            );
+
+        return bankAccountService.updateCurrentBankAccount(
+                bankAccountMapper.currentAccountFromBankAccountRequestDto(accountRequestDTO)
+        );
     }
 
 }

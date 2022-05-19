@@ -4,6 +4,8 @@ package me.ubmagh.ng_spring_digital_banking.dtos;
 import lombok.Data;
 import me.ubmagh.ng_spring_digital_banking.enums.AccountStatus;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.util.Date;
 
 

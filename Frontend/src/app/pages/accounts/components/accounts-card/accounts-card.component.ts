@@ -35,6 +35,10 @@ export class AccountsCardComponent implements OnInit, OnDestroy {
   createForm!: FormGroup;
   submitting =false;
 
+  editForm !:FormGroup;
+  edittedAccount ?:BankAccount; 
+  editFormSelectedType:string="SavingAccount";
+
   constructor(
     private customerservice: CustomerService,
     private fb: FormBuilder,
@@ -42,6 +46,12 @@ export class AccountsCardComponent implements OnInit, OnDestroy {
     private accountService:AccountService
   ) {
     this.onSavingAccountSelected();
+    this.editForm = this.fb.group({
+      status: this.fb.control(''), // intial value
+      interestRate: this.fb.control('', [
+        Validators.required
+      ])
+    });
   }
 
   onCurrentAccountSelected() {
@@ -122,6 +132,59 @@ export class AccountsCardComponent implements OnInit, OnDestroy {
         console.error(err.message);
       },
     });
+  }
+
+  openEditModal( account:BankAccount){
+    if( account.type=="SavingAccount" ){
+      this.editForm = this.fb.group({
+        status: this.fb.control(account.status), // intial value
+        interestRate: this.fb.control(account.interestRate, [
+          Validators.required
+        ])
+      });
+    }else{
+      this.editForm = this.fb.group({
+        status: this.fb.control(account.status), // intial value
+        overDraft: this.fb.control(account.overDraft, [
+          Validators.required
+        ])
+      });
+    }
+    this.editFormSelectedType = account.type;
+    this.edittedAccount = account;
+    document.getElementById('toggleEditModalBtn')?.click();
+  }
+  
+  handleditFormSubmit(){
+    this.submitting = true;
+    let ba:BankAccount = {
+      createdAt: new Date(),
+      balance: this.edittedAccount!.balance,
+      customer: this.customer,
+      id: this.edittedAccount!.id,
+      status: this.editForm.value.status,
+      type: this.editFormSelectedType,
+      interestRate: this.editForm.value?.interestRate,
+      overDraft: this.editForm.value.overDraft
+    }
+    this.accountService.updateCustomer( this.edittedAccount!.id, ba ).subscribe({
+      next: sa=>{
+        this.toastr.success( '', 'Account updated successfully!', { closeButton: true, positionClass: "toast-top-center" });
+        this.createForm.reset();
+        this.editFormSelectedType ="SavingAccount"
+        this.submitting=false;
+        document.getElementById("closeModal2")?.click();
+        this.getAccounts(this.page);
+      },
+      error: err=>{
+        this.toastr.error( '', 'Account could not be updated, an error happened !', { closeButton: true, positionClass: "toast-top-center", });
+        this.submitting=false;
+      }
+    })
+  }
+
+  confirmDelete( account:BankAccount){
+
   }
 
   ngOnDestroy(): void {

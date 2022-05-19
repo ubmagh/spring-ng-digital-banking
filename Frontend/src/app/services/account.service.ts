@@ -11,6 +11,10 @@ export class AccountService {
 
   public saveCustomer( account :BankAccount): Observable<BankAccount> {
     return this.http.post<BankAccount>(environment.backendUrl+"/api/accounts", account);
-  } 
+  }
+  
+  public updateCustomer( accountId:string, account :BankAccount): Observable<BankAccount> {
+    return this.http.put<BankAccount>(environment.backendUrl+"/api/accounts/"+accountId, account);
+  }
 
 }

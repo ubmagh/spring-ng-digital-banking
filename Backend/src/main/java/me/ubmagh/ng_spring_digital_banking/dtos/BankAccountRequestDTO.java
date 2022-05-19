@@ -25,4 +25,6 @@ public class BankAccountRequestDTO  {
 
     private double interestRate;
 
+
+    private AccountStatus status;
 }
