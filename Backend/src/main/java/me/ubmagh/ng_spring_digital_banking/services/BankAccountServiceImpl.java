@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.ubmagh.ng_spring_digital_banking.dtos.*;
 import me.ubmagh.ng_spring_digital_banking.entities.*;
+import me.ubmagh.ng_spring_digital_banking.enums.AccountStatus;
 import me.ubmagh.ng_spring_digital_banking.enums.OperationType;
 import me.ubmagh.ng_spring_digital_banking.exceptions.BalanceNotSufficientException;
 import me.ubmagh.ng_spring_digital_banking.exceptions.BankAccountNotFoundExcetion;
@@ -48,6 +49,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         currentBankAccount.setBalance( initialBalance );
         currentBankAccount.setCustomer( customer );
         currentBankAccount.setOverDraft( overDraft );
+        currentBankAccount.setStatus(AccountStatus.CREATED);
 
         CurrentAccount savedBankAccount = accountRepository.save(currentBankAccount);
         log.info("✔ Current-bank-account created !");
@@ -70,6 +72,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         savingBankAccount.setBalance( initialBalance );
         savingBankAccount.setCustomer( customer );
         savingBankAccount.setInterestRate( interestRate );
+        savingBankAccount.setStatus(AccountStatus.CREATED);
 
         SavingAccount savedBankAccount = accountRepository.save(savingBankAccount);
         log.info("✔ Saving-bank-account created !");

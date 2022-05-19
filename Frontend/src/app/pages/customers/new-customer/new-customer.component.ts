@@ -14,7 +14,7 @@ export class NewCustomerComponent implements OnInit {
 
   form !: FormGroup;
   success_toast :any;
-
+  submitting=false;
 
   constructor( private fb: FormBuilder, 
     private customerService: CustomerService,
@@ -37,6 +37,7 @@ export class NewCustomerComponent implements OnInit {
   }
 
   handleCustomerCreate(){
+    this.submitting=true;
     let customer:Customer = {
       id:"",
       name: this.form.value.name,
@@ -46,9 +47,11 @@ export class NewCustomerComponent implements OnInit {
       next: data=>{
         this.toastr.success( '', 'Customer added successfully!', { closeButton: true, positionClass: "toast-top-center" });
         this.form.reset();
+        this.submitting=false;
       },
       error: err=>{
         this.toastr.error( '', 'Customer not saved, an error happened !', { closeButton: true, positionClass: "toast-top-center", });
+        this.submitting=false;
       }
     });
   }

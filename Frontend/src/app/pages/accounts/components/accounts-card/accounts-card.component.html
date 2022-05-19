@@ -4,10 +4,7 @@
             <button class="accordion-button collapsed bg-dark text-white" type="button" data-bs-toggle="collapse"
                 data-bs-target="#anyAccordionSampleHere-collapseOne" aria-expanded="true"
                 aria-controls="anyAccordionSampleHere-collapseOne">
-                <ng-container *ngIf="
-                customerId.length == 0;
-            else customerChosen
-          ">
+                <ng-container *ngIf="customerId.length == 0; else customerChosen">
                     <span class="text-warning"> Customer accounts 👀</span>
                 </ng-container>
                 <ng-template #customerChosen>
@@ -18,38 +15,50 @@
         <div id="anyAccordionSampleHere-collapseOne" class="accordion-collapse collapse" data-bs-toggle="collapse"
             aria-labelledby="anyAccordionSampleHere-headingOne">
             <div class="accordion-body bg-dark text-light pb-3">
-
-                <ng-container *ngIf="customerId.length>0; else chooseCustomer">
-
+                <ng-container *ngIf="customerId.length > 0; else chooseCustomer">
                     <div class="customerAccordioBody">
                         <ng-container *ngIf="accounts; else loadingOrFailure">
+                            <div class="alert alert-primary text-center" role="alert">
+                                Selected customer : <strong> {{ customer?.name }} </strong>, his
+                                accounts list :
+                            </div>
 
-                            <div class="alert alert-primary" role="alert">
-                                Selected customer : <strong> {{ customer?.name }} </strong>, his accounts list :
+                            <div class="w-100 text-center">
+                                <button class="btn btn-outline-success d-block mx-auto" data-bs-toggle="modal"
+                                    data-bs-target="#staticBackdrop">
+                                    <i class="bi bi-plus-square"></i>
+                                    create an account for current customer
+                                </button>
                             </div>
 
                             <table class="table table-dark table-hover text-center align-middle"
                                 style="overflow-y: auto; position: relative">
                                 <thead>
                                     <tr>
-                                        <th> <strong>ID</strong> </th>
-                                        <th> Type </th>
-                                        <th> Balance 💸</th>
-                                        <th> Opened at </th>
-                                        <th> Status </th>
-                                        <th> Other information 🤔 </th>
+                                        <th><strong>ID</strong></th>
+                                        <th>Type</th>
+                                        <th>Balance 💸</th>
+                                        <th>Opened at</th>
+                                        <th>Status</th>
+                                        <th>Other information 🤔</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let account of accounts">
                                         <td>{{ account.id }}</td>
                                         <td>{{ account.type }}</td>
-                                        <td class="text-success">{{ account.balance | currency }}</td>
+                                        <td class="text-success">
+                                            {{ account.balance | currency }}
+                                        </td>
                                         <td>{{ account.createdAt | date }}</td>
                                         <td>{{ account.status }}</td>
                                         <td>
-                                            <ng-container *ngIf="account.type=='SavingAccount'; else currentAccountMsg">
-                                                <strong> interest rate : </strong> {{ account.interestRate }}
+                                            <ng-container *ngIf="
+                          account.type == 'SavingAccount';
+                          else currentAccountMsg
+                        ">
+                                                <strong> interest rate : </strong>
+                                                {{ account.interestRate }}
                                             </ng-container>
                                             <ng-template #currentAccountMsg>
                                                 <strong> overDraft : </strong> {{ account.overDraft }}
@@ -85,54 +94,171 @@
                         <div class="col">
                             <nav aria-label="Page navigation example">
                                 <ul class="pagination">
-                                    <li class="page-item" [class.disabled]="page<=1"> 
-                                        <a class="page-link" href="#"  (click)="getAccounts(page-1)">
-                                            Previous
+                                    <li class="page-item" [class.disabled]="page <= 1">
+                                        <a class="page-link" href="#" (click)="getAccounts(page - 1)">
+                                            <i class="bi bi-caret-left-square-fill"></i>
                                         </a>
                                     </li>
-                                    <ng-container *ngFor="let i of range( page-1, nbrPages)">
-                                        <li class="page-item" [class.active]="i==page-1" >
-                                            <a class="page-link" href="#" (click)="getAccounts(i+1)">
-                                                {{ i+1 }}
+                                    <ng-container *ngFor="let i of range(page - 1, nbrPages)">
+                                        <li class="page-item" [class.active]="i == page - 1">
+                                            <a class="page-link" href="#" (click)="getAccounts(i + 1)">
+                                                {{ i + 1 }}
                                             </a>
                                         </li>
                                     </ng-container>
-                                    <li class="page-item" [class.disabled]="page>=nbrPages">
-                                        <a class="page-link" href="#" (click)="getAccounts(page+1)">
-                                            Next
+                                    <li class="page-item" [class.disabled]="page >= nbrPages">
+                                        <a class="page-link" href="#" (click)="getAccounts(page + 1)">
+                                            <i class="bi bi-caret-right-square-fill"></i>
                                         </a>
                                     </li>
                                 </ul>
                             </nav>
                         </div>
-                        <div class="col">
-                            <button class="btn btn-outline-success">
-                                <i class="bi bi-plus-square"></i>
-                                create an account for current customer
-                            </button>
-                        </div>
                         <div class="col text-end">
-                            <select class="form-select w-auto ms-auto"  (change)="setSize(sizeSelect.value)" #sizeSelect aria-label="Default select example">
-                                <option [selected]="size==1" value="1">1</option>
-                                <option [selected]="size==2" value="2">2</option>
-                                <option [selected]="size==5" value="5">5</option>
-                                <option [selected]="size==10" value="10">10</option>
-                                <option [selected]="size==25" value="25">25</option>
+                            <select class="form-select w-auto ms-auto" (change)="setSize(sizeSelect.value)" #sizeSelect
+                                aria-label="Default select example">
+                                <option [selected]="size == 1" value="1">1</option>
+                                <option [selected]="size == 2" value="2">2</option>
+                                <option [selected]="size == 5" value="5">5</option>
+                                <option [selected]="size == 10" value="10">10</option>
+                                <option [selected]="size == 25" value="25">25</option>
                             </select>
                             <small class="text-muted"> number of elements </small>
                         </div>
                     </div>
-
                 </ng-container>
                 <ng-template #chooseCustomer>
-
                     <div class="alert alert-info" role="alert">
                         You have to select a customer first from the list above ! 👀👀
                     </div>
-
                 </ng-template>
-
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-dark text-white">
+            <form [formGroup]="createForm" (ngSubmit)="handleCreateFormSubmit()">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">
+                        Create a new account
+                    </h5>
+                    <button type="button" class="btn-close text-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-3">
+                    <div class="mb-3 row col-10 mx-auto">
+                        <div class="mb-3">
+                            <label for="cutomerName" class="form-label">
+                                Current customer :
+                            </label>
+                            <input type="text" class="form-control text-center bg-dark border border-white text-white"
+                                [disabled]="true" id="cutomerName" [value]="customer?.name" />
+                        </div>
+
+                        <div class="col-12 mb-1">
+                            <label> Account type : </label>
+                        </div>
+                        <div class="form-check col ms-5 mb-3">
+                            <input class="form-check-input" type="radio" (click)="onSavingAccountSelected()"
+                                value="SavingAccount" formControlName="type" id="flexRadioDefault1" [checked]="selectedType=='SavingAccount'" />
+                            <label class="form-check-label" for="flexRadioDefault1" (click)="onSavingAccountSelected()">
+                                Saving account
+                            </label>
+                        </div>
+                        <div class="form-check col mb-3">
+                            <input class="form-check-input" type="radio" (click)="onCurrentAccountSelected()" [checked]="selectedType=='CurrentAccount'"
+                                value="CurrentAccount" formControlName="type" id="flexRadioDefault2" />
+                            <label class="form-check-label" for="flexRadioDefault2"
+                                (click)="onCurrentAccountSelected()">
+                                Current account
+                            </label>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="balance" class="form-label">
+                                Initial balance :
+                            </label>
+                            <input type="text" class="form-control" id="balance" formControlName="balance"
+                                [class.is-valid]="
+                  createForm.get('balance')!.valid &&
+                  (createForm.get('balance')!.dirty ||
+                    createForm.get('balance')!.touched)
+                " [class.is-invalid]="
+                  createForm.get('balance')!.invalid &&
+                  (createForm.get('balance')!.dirty ||
+                    createForm.get('balance')!.touched)
+                " class="form-control" id="balance" />
+                            <ng-container *ngIf="createForm.get('balance')!.touched">
+                                <small class="text-danger d-block"
+                                    *ngIf="createForm.get('balance')!.hasError('required')">
+                                    💸 initial balance is required !
+                                </small>
+                            </ng-container>
+                        </div>
+
+                        <div class="mb-3" *ngIf="selectedType == 'SavingAccount'">
+                            <label for="interestRate" class="form-label">
+                                Interest rate :
+                            </label>
+                            <input type="text" class="form-control" id="interestRate" [class.is-valid]="
+                  createForm.get('interestRate')!.valid &&
+                  (createForm.get('interestRate')!.dirty ||
+                    createForm.get('interestRate')!.touched)
+                " [class.is-invalid]="
+                  createForm.get('interestRate')!.invalid &&
+                  (createForm.get('interestRate')!.dirty ||
+                    createForm.get('interestRate')!.touched)
+                " formControlName="interestRate" />
+                            <ng-container *ngIf="createForm.get('interestRate')!.touched">
+                                <small class="text-danger d-block"
+                                    *ngIf="createForm.get('interestRate')!.hasError('required')">
+                                    💸 Interest rate balance is required !
+                                </small>
+                                <small class="text-danger d-block"
+                                    *ngIf="createForm.get('interestRate')!.hasError('min')">
+                                    💸 invalude rate (%)
+                                </small>
+                                <small class="text-danger d-block"
+                                    *ngIf="createForm.get('interestRate')!.hasError('max')">
+                                    💸 invalude rate (%)
+                                </small>
+                            </ng-container>
+                        </div>
+
+                        <div class="mb-3" *ngIf="selectedType == 'CurrentAccount'">
+                            <label for="overDraft" class="form-label"> Over draft : </label>
+                            <input type="text" class="form-control" id="overDraft" [class.is-valid]="
+                  createForm.get('overDraft')!.valid &&
+                  (createForm.get('overDraft')!.dirty ||
+                    createForm.get('overDraft')!.touched)
+                " [class.is-invalid]="
+                  createForm.get('overDraft')!.invalid &&
+                  (createForm.get('overDraft')!.dirty ||
+                    createForm.get('overDraft')!.touched)
+                " formControlName="overDraft" />
+                            <ng-container *ngIf="createForm.get('overDraft')!.touched">
+                                <small class="text-danger d-block"
+                                    *ngIf="createForm.get('overDraft')!.hasError('required')">
+                                    💸 OverDraft balance is required !
+                                </small>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeModal">
+                        <i class="bi bi-x-circle"></i> Close
+                    </button>
+                    <button type="submit" class="btn btn-success" [disabled]="!createForm.valid || submitting">
+                        <i class="bi bi-plus-square"></i> create
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

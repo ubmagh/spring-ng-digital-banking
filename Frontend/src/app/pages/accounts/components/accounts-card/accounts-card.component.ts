@@ -1,7 +1,14 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subscription, tap } from 'rxjs';
+import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { Observable, Subject, Subscription, tap } from 'rxjs';
 import { BankAccount } from 'src/app/models/account.model';
 import { Customer } from 'src/app/models/customer.model';
+import { AccountService } from 'src/app/services/account.service';
 import { CustomerService } from 'src/app/services/customer.service';
 
 @Component({
@@ -10,7 +17,9 @@ import { CustomerService } from 'src/app/services/customer.service';
   styleUrls: ['./accounts-card.component.sass'],
 })
 export class AccountsCardComponent implements OnInit, OnDestroy {
+
   @Input('customerIdObs') customerIdObs!: Observable<string>;
+
   customerIdObs$?: Subscription;
 
   customerId: string = '';
@@ -21,8 +30,75 @@ export class AccountsCardComponent implements OnInit, OnDestroy {
   accounts: BankAccount[] = [];
 
   errorMessage: string = '';
+  selectedType: string = 'SavingAccount';
 
-  constructor(private customerservice: CustomerService) {}
+  createForm!: FormGroup;
+  submitting =false;
+
+  constructor(
+    private customerservice: CustomerService,
+    private fb: FormBuilder,
+    private toastr: ToastrService,
+    private accountService:AccountService
+  ) {
+    this.onSavingAccountSelected();
+  }
+
+  onCurrentAccountSelected() {
+    this.selectedType = 'CurrentAccount';
+    this.createForm = this.fb.group({
+      type: this.fb.control('CurrentAccount'), // intial value
+      balance: this.fb.control('', [
+        Validators.required
+      ]),
+      overDraft: this.fb.control(0, [
+        Validators.required,
+      ]),
+    });
+  }
+
+  onSavingAccountSelected() {
+    this.selectedType = 'SavingAccount';
+    this.createForm = this.fb.group({
+      type: this.fb.control('SavingAccount'), // intial value
+      balance: this.fb.control('',[
+        Validators.required
+      ]),
+      interestRate: this.fb.control(0, [
+        Validators.min(0),
+        Validators.max(100),
+        Validators.required,
+      ]),
+    });
+  }
+
+  handleCreateFormSubmit() {
+    this.submitting = true;
+    let ba : BankAccount = {
+      createdAt: new Date(),
+      balance: this.createForm.value.balance,
+      customer: this.customer,
+      id: "-",
+      status: "-",
+      type: this.selectedType,
+      interestRate: this.createForm.value?.interestRate,
+      overDraft: this.createForm.value.overDraft
+    }
+    this.accountService.saveCustomer( ba).subscribe({
+      next: sa=>{
+        this.toastr.success( '', 'Account created successfully!', { closeButton: true, positionClass: "toast-top-center" });
+        this.createForm.reset();
+        this.selectedType ="SavingAccount"
+        this.submitting=false;
+        document.getElementById("closeModal")?.click();
+        this.getAccounts(this.page);
+      },
+      error: err=>{
+        this.toastr.error( '', 'Account could not be saved, an error happened !', { closeButton: true, positionClass: "toast-top-center", });
+        this.submitting=false;
+      }
+    })
+  } 
 
   ngOnInit(): void {
     this.customerIdObs$ = this.customerIdObs.subscribe({

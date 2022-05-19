@@ -1,6 +1,7 @@
 package me.ubmagh.ng_spring_digital_banking.mappers;
 
 import lombok.AllArgsConstructor;
+import me.ubmagh.ng_spring_digital_banking.dtos.BankAccountRequestDTO;
 import me.ubmagh.ng_spring_digital_banking.dtos.CurrentBankAccountDTO;
 import me.ubmagh.ng_spring_digital_banking.dtos.SavingBankAccountDTO;
 import me.ubmagh.ng_spring_digital_banking.entities.CurrentAccount;
@@ -43,6 +44,20 @@ public class BankAccountMapper {
         currentAccountDTO.setCustomer( customerMapper.fromCustomer( currentAccount.getCustomer() ) );
         currentAccountDTO.setType( currentAccount.getClass().getSimpleName() );
         return currentAccountDTO;
+    }
+
+    public SavingAccount savingAccountFromBankAccountRequestDto(BankAccountRequestDTO bankAccountRequestDTO){
+        SavingAccount savingAccount = new SavingAccount();
+        BeanUtils.copyProperties( bankAccountRequestDTO, savingAccount);
+        savingAccount.setCustomer( customerMapper.fromCustomerDto( bankAccountRequestDTO.getCustomer() ) );
+        return savingAccount;
+    }
+
+    public CurrentAccount currentAccountFromBankAccountRequestDto(BankAccountRequestDTO bankAccountRequestDTO){
+        CurrentAccount currentAccount = new CurrentAccount();
+        BeanUtils.copyProperties( bankAccountRequestDTO, currentAccount);
+        currentAccount.setCustomer( customerMapper.fromCustomerDto( bankAccountRequestDTO.getCustomer() ) );
+        return currentAccount;
     }
 
 }
