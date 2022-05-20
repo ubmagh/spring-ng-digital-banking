@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ToastrService } from 'ngx-toastr';
 import { catchError, map, Observable, tap, throwError } from 'rxjs';
-import { Customer } from 'src/app/models/customer.model';
+import { Customer, CustomersPaginated } from 'src/app/models/customer.model';
 import { CustomerService } from 'src/app/services/customer.service';
 import { MDCDialog } from '@material/dialog';
 
@@ -14,9 +14,13 @@ import { MDCDialog } from '@material/dialog';
 })
 export class CustomersComponent implements OnInit {
 
-  customers !: Observable<Customer[]>;
+  customers !: Observable<CustomersPaginated>;
   errorMessage :string ="";
   searchForm ?: FormGroup;
+
+  page: number = 1;
+  size: number = 10;
+  nbrPages: number = 1;
 
   constructor( 
     private titleService :Title,
@@ -34,8 +38,25 @@ export class CustomersComponent implements OnInit {
 
   ngOnInit(): void {
     
-    this.customers = this.customerService.getCustomers().pipe(
-      tap(()=>{ this.errorMessage=""; }),
+    this.getCustomers(this.page);
+
+    // instead, can do next line :
+    // this.handleSearchSubmit();
+  
+  }
+
+  getCustomers( page:number){
+    if( this.searchForm?.value.keyword.length>0){
+      this.page = page;
+      this.handleSearchSubmit();
+    }else 
+    this.customers = this.customerService.getCustomersPaginated(page, this.size ).pipe(
+      tap((e)=>{ 
+        this.errorMessage="";
+        this.nbrPages = e.totalPages;
+        this.page = e.currentPage+1;
+        this.size = e.pageSize;
+      }),
       catchError(
         err=>{
           this.errorMessage = <string>err.message;
@@ -43,17 +64,17 @@ export class CustomersComponent implements OnInit {
         }
       )
     )
-
-    // instead, can do next line :
-    // this.handleSearchSubmit();
-  
   }
 
 
   handleSearchSubmit(){
     let kw = <string>this.searchForm?.value.keyword;
-    this.customers = this.customerService.searchCustomers( kw ).pipe(
-      tap(()=>{ this.errorMessage=""; }),
+    this.customers = this.customerService.searchCustomersPaginated( kw, this.page, this.size ).pipe(
+      tap((e)=>{ this.errorMessage="";
+      this.nbrPages = e.totalPages;
+      this.page = e.currentPage+1;
+      this.size = e.pageSize;
+     }),
       catchError(
         err=>{
           this.errorMessage = <string>err.message;
@@ -79,8 +100,8 @@ export class CustomersComponent implements OnInit {
             // instead of loading data again, we can simply let the the browser do the work !
             this.customers = this.customers.pipe(
               map(data=>{
-                let index = data.indexOf(customer)
-                data.slice( index, 1);
+                let index = data.customers.indexOf(customer)
+                data.customers.slice( index, 1);
                 return data;
               })
             )
@@ -98,4 +119,31 @@ export class CustomersComponent implements OnInit {
     
   }
 
+  range(currentPage: number, nbrPages: number) {
+    let arr;
+    if (nbrPages > 5) {
+      arr = new Array(5);
+
+      if (currentPage <= 2) {
+        for (let i = 0; i < 5; i++) arr[i] = i;
+      } else {
+        let j = 0;
+        if (currentPage >= nbrPages - 2) {
+          for (let i = nbrPages - 5; i < nbrPages; i++) arr[j++] = i;
+        } else {
+          for (let i = currentPage - 2; i < currentPage + 3; i++) arr[j++] = i;
+        }
+      }
+    } else {
+      arr = new Array(nbrPages);
+      for (let i = 0; i < nbrPages; i++) arr[i] = i;
+    }
+
+    return arr;
+  }
+
+  setSize(size: string) {
+    this.size = +size;
+    this.handleSearchSubmit();
+  }
 }

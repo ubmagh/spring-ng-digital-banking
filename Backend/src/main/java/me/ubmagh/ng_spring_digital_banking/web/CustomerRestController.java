@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.ubmagh.ng_spring_digital_banking.dtos.CustomerAccountsDTO;
 import me.ubmagh.ng_spring_digital_banking.dtos.CustomerDTO;
+import me.ubmagh.ng_spring_digital_banking.dtos.CustomerPageableDTO;
 import me.ubmagh.ng_spring_digital_banking.exceptions.CustomerNotFoundException;
 import me.ubmagh.ng_spring_digital_banking.services.CustomerService;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +24,21 @@ public class CustomerRestController {
     @GetMapping("/customers")
     public List<CustomerDTO> getCustomers(){
         return customerService.listCustomers();
+    }
+
+    @GetMapping("/customers/paginated")
+    public CustomerPageableDTO getPaginatedCustomers(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size
+    ){
+        return customerService.paginateCustomers( page, size);
+    }
+
+    @GetMapping("/customers/paginated/search")
+    public CustomerPageableDTO searchCustomersPaginated( @RequestParam(name = "keyword", defaultValue = "") String keyword,
+                                                         @RequestParam(name = "page", defaultValue = "0") int page,
+                                                         @RequestParam(name = "size", defaultValue = "10") int size){
+        return customerService.searchCustomerPaginated( page, size, keyword);
     }
 
     @GetMapping("/customers/search")

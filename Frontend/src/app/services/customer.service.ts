@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { CustomerAccountResponse } from '../models/account.model';
-import { Customer } from '../models/customer.model';
+import { Customer, CustomersPaginated } from '../models/customer.model';
 
 @Injectable()
 export class CustomerService {
@@ -17,6 +17,14 @@ export class CustomerService {
     return this.http.get<Customer[]>(environment.backendUrl+"/api/customers");
   }
 
+  public getCustomersPaginated( page :number, size :number) : Observable<CustomersPaginated> {
+    return this.http.get<CustomersPaginated>(environment.backendUrl+"/api/customers/paginated",{
+      params: { 
+        page: page-1, size
+      }
+    });
+  }
+
   public searchCustomers( keyword :string) : Observable<Customer[]> {
     return this.http.get<Customer[]>(environment.backendUrl+"/api/customers/search",{
       params: { 
@@ -24,6 +32,16 @@ export class CustomerService {
       }
     });
   }
+
+  public searchCustomersPaginated( keyword :string, page:number, size:number) : Observable<CustomersPaginated> {
+    return this.http.get<CustomersPaginated>(environment.backendUrl+"/api/customers/paginated/search",{
+      params: { 
+        keyword: keyword,
+        page: page-1, size
+      }
+    });
+  }
+  
 
   public saveCustomer( customer :Customer): Observable<Customer> {
     return this.http.post<Customer>(environment.backendUrl+"/api/customers", customer);
@@ -49,5 +67,7 @@ export class CustomerService {
       }
     });
   }
+
+  
 
 }

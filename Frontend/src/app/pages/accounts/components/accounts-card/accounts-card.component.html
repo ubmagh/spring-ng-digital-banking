@@ -105,19 +105,19 @@
                             <nav aria-label="Page navigation example">
                                 <ul class="pagination">
                                     <li class="page-item" [class.disabled]="page <= 1">
-                                        <a class="page-link" href="#" (click)="getAccounts(page - 1)">
+                                        <a class="page-link" (click)="getAccounts(page - 1)">
                                             <i class="bi bi-caret-left-square-fill"></i>
                                         </a>
                                     </li>
                                     <ng-container *ngFor="let i of range(page - 1, nbrPages)">
                                         <li class="page-item" [class.active]="i == page - 1">
-                                            <a class="page-link" href="#" (click)="getAccounts(i + 1)">
+                                            <a class="page-link" (click)="getAccounts(i + 1)">
                                                 {{ i + 1 }}
                                             </a>
                                         </li>
                                     </ng-container>
                                     <li class="page-item" [class.disabled]="page >= nbrPages">
-                                        <a class="page-link" href="#" (click)="getAccounts(page + 1)">
+                                        <a class="page-link" (click)="getAccounts(page + 1)">
                                             <i class="bi bi-caret-right-square-fill"></i>
                                         </a>
                                     </li>

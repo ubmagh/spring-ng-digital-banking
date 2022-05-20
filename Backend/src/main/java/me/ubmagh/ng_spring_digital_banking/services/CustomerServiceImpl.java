@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.ubmagh.ng_spring_digital_banking.dtos.CustomerAccountsDTO;
 import me.ubmagh.ng_spring_digital_banking.dtos.CustomerDTO;
+import me.ubmagh.ng_spring_digital_banking.dtos.CustomerPageableDTO;
 import me.ubmagh.ng_spring_digital_banking.entities.BankAccount;
 import me.ubmagh.ng_spring_digital_banking.entities.CurrentAccount;
 import me.ubmagh.ng_spring_digital_banking.entities.Customer;
@@ -97,6 +98,22 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public CustomerPageableDTO searchCustomerPaginated( int page, int size, String searchKeyword){
+        Page<Customer> customers = customerRepository.searchCustomerByNamePaginated("%"+searchKeyword+"%", PageRequest.of(page, size) );
+
+        CustomerPageableDTO dto = new CustomerPageableDTO();
+        dto.setCurrentPage( page );
+        dto.setPageSize(size);
+        dto.setTotalPages( customers.getTotalPages() );
+        dto.setCustomers(
+                customers.getContent().stream().map(customer -> {
+                    return customerMapper.fromCustomer( customer );
+                }).collect(Collectors.toList())
+        );
+        return dto;
+    }
+
+    @Override
     public CustomerAccountsDTO getCustomerAccounts(String customerId, int page, int size) throws CustomerNotFoundException {
         this.getCustomer(customerId); // throws exception if not found
         Page<BankAccount> customerAccounts = accountRepository.getCustomerAccounts(customerId, PageRequest.of(page, size));
@@ -111,6 +128,23 @@ public class CustomerServiceImpl implements CustomerService {
                     if (bankAccount instanceof SavingAccount)
                         return bankAccountMapper.fromSavingAccount((SavingAccount) bankAccount);
                     return bankAccountMapper.fromCurrentAccount((CurrentAccount) bankAccount);
+                }).collect(Collectors.toList())
+        );
+        return dto;
+    }
+
+
+    @Override
+    public CustomerPageableDTO paginateCustomers(int page, int size) {
+        Page<Customer> customers = customerRepository.findAll( PageRequest.of(page,size));
+
+        CustomerPageableDTO dto = new CustomerPageableDTO();
+        dto.setCurrentPage( page );
+        dto.setPageSize(size);
+        dto.setTotalPages( customers.getTotalPages() );
+        dto.setCustomers(
+                customers.getContent().stream().map(customer -> {
+                    return customerMapper.fromCustomer( customer );
                 }).collect(Collectors.toList())
         );
         return dto;
