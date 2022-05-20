@@ -84,4 +84,9 @@ public class BankAccountRestController {
         );
     }
 
+    @DeleteMapping("/accounts/{id}")
+    public void deleteBankAccount(@PathVariable(name = "id") String accountId ) throws BankAccountNotFoundExcetion {
+         bankAccountService.deleteAccount( accountId );
+    }
+
 }

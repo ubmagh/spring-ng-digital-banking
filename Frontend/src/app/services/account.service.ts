@@ -9,12 +9,16 @@ export class AccountService {
 
   constructor( private http:HttpClient ) { }
 
-  public saveCustomer( account :BankAccount): Observable<BankAccount> {
+  public saveAccount( account :BankAccount): Observable<BankAccount> {
     return this.http.post<BankAccount>(environment.backendUrl+"/api/accounts", account);
   }
   
-  public updateCustomer( accountId:string, account :BankAccount): Observable<BankAccount> {
+  public updateAccount( accountId:string, account :BankAccount): Observable<BankAccount> {
     return this.http.put<BankAccount>(environment.backendUrl+"/api/accounts/"+accountId, account);
+  }
+
+  public deleteAccount( accountId:string ) {
+    return this.http.delete(environment.backendUrl+"/api/accounts/"+accountId);
   }
 
 }

@@ -187,4 +187,11 @@ public class BankAccountServiceImpl implements BankAccountService {
     }
 
 
+    @Override
+    public void deleteAccount(String accountId) {
+        log.info("⌛ deleting account... ");
+        accountRepository.deleteById(accountId);
+        log.info("✔ customer account ");
+    }
+
 }

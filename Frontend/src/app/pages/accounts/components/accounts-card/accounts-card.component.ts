@@ -39,6 +39,8 @@ export class AccountsCardComponent implements OnInit, OnDestroy {
   edittedAccount ?:BankAccount; 
   editFormSelectedType:string="SavingAccount";
 
+  deletedAccount ?:BankAccount;
+
   constructor(
     private customerservice: CustomerService,
     private fb: FormBuilder,
@@ -89,12 +91,12 @@ export class AccountsCardComponent implements OnInit, OnDestroy {
       balance: this.createForm.value.balance,
       customer: this.customer,
       id: "-",
-      status: "-",
+      status: "CREATED",
       type: this.selectedType,
       interestRate: this.createForm.value?.interestRate,
       overDraft: this.createForm.value.overDraft
     }
-    this.accountService.saveCustomer( ba).subscribe({
+    this.accountService.saveAccount( ba).subscribe({
       next: sa=>{
         this.toastr.success( '', 'Account created successfully!', { closeButton: true, positionClass: "toast-top-center" });
         this.createForm.reset();
@@ -167,7 +169,7 @@ export class AccountsCardComponent implements OnInit, OnDestroy {
       interestRate: this.editForm.value?.interestRate,
       overDraft: this.editForm.value.overDraft
     }
-    this.accountService.updateCustomer( this.edittedAccount!.id, ba ).subscribe({
+    this.accountService.updateAccount( this.edittedAccount!.id, ba ).subscribe({
       next: sa=>{
         this.toastr.success( '', 'Account updated successfully!', { closeButton: true, positionClass: "toast-top-center" });
         this.createForm.reset();
@@ -178,13 +180,33 @@ export class AccountsCardComponent implements OnInit, OnDestroy {
       },
       error: err=>{
         this.toastr.error( '', 'Account could not be updated, an error happened !', { closeButton: true, positionClass: "toast-top-center", });
+        console.error(err.message)
         this.submitting=false;
       }
     })
   }
 
   confirmDelete( account:BankAccount){
+    this.deletedAccount = account;
+    document.getElementById("toggleDeleteModalBtn")?.click();
+  }
 
+  handldeleteFormSubmit(){
+    this.submitting =true;
+    this.accountService.deleteAccount(this.deletedAccount!.id).subscribe({
+      next: any=>{
+        this.toastr.success( '', 'Account deleted successfully!', { closeButton: true, positionClass: "toast-top-center" });
+        this.submitting=false;
+        this.getAccounts(this.page);
+        document.getElementById('closeModal3')?.click();
+      },
+      error: err=>{
+        this.toastr.error( '', 'Account could not be deleted, There could be operations related to it !', { closeButton: true, positionClass: "toast-top-center", });
+        this.submitting=false;
+        document.getElementById('closeModal3')?.click();
+        console.error(err.message)
+      }
+    })
   }
 
   ngOnDestroy(): void {

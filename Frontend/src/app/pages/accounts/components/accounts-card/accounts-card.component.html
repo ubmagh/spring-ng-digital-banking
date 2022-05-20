@@ -281,7 +281,7 @@
 
 
 
-<!-- Button trigger modal -->
+<!-- Button trigger edit-modal -->
 <button type="button" class="d-none btn btn-primary" id="toggleEditModalBtn" data-bs-toggle="modal" data-bs-target="#editStaticBackdrop">
     😅😅
 </button>
@@ -374,6 +374,43 @@
                     </button>
                     <button type="submit" class="btn btn-success" [disabled]="!editForm.valid || submitting">
                         <i class="bi bi-box-arrow-down"></i> Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Button trigger edit-modal -->
+<button type="button" class="d-none btn btn-primary" id="toggleDeleteModalBtn" data-bs-toggle="modal" data-bs-target="#deleteStaticBackdrop">
+    😅😅
+</button>
+<!-- edit Modal -->
+<div class="modal fade" id="deleteStaticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="deleteStaticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-dark text-white">
+            <form (ngSubmit)="handldeleteFormSubmit()">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteStaticBackdropLabel">
+                        Deleting an account
+                    </h5>
+                    <button type="button" class="btn-close text-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-3">
+                    <div class="alert alert-warning">
+                        Are you sure you want delete this account ?
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeModal3">
+                        <i class="bi bi-x-circle"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-success" [disabled]="submitting">
+                        <i class="bi bi-box-arrow-down"></i> Delete
                     </button>
                 </div>
             </form>
