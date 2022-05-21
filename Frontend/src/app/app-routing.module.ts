@@ -16,6 +16,10 @@ const routes: Routes = [
     loadChildren: ()=>import("./pages/customers/customers.module").then(e=>e.CustomersModule)
   },
   {
+    path: "operations",
+    loadChildren: ()=>import("./pages/operations/operations.module").then(e=>e.OperationsModule)
+  },
+  {
     path: "**",
     component: Error404Component  
   }

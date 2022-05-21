@@ -1,51 +1,61 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Title } from '@angular/platform-browser';
 import { ToastrService } from 'ngx-toastr';
-import { catchError, map, Observable, tap, throwError } from 'rxjs';
+import { catchError, Observable, Subject, Subscription, tap, throwError } from 'rxjs';
 import { Customer, CustomersPaginated } from 'src/app/models/customer.model';
 import { CustomerService } from 'src/app/services/customer.service';
-import { MDCDialog } from '@material/dialog';
-import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-customers',
-  templateUrl: './customers.component.html',
-  styleUrls: ['./customers.component.sass']
+  selector: 'app-customers-card',
+  templateUrl: './customers-card.component.html',
+  styleUrls: ['./customers-card.component.sass'],
 })
-export class CustomersComponent implements OnInit {
+export class CustomersCardComponent implements OnInit, OnDestroy {
+  customers!: Observable<CustomersPaginated>;
+  errorMessage :string = '';
+  searchForm ?:FormGroup;
+  selectedCustomerForm ?:FormGroup;
+  selectedCustomerName :string="";
 
-  customers !: Observable<CustomersPaginated>;
-  errorMessage :string ="";
-  searchForm ?: FormGroup;
+  @Input("selectedCustomerSubject") selectedCustomerSubject !:Subject<string>; 
+  selectedCustomerSubject$ ?: Subscription;
 
   page: number = 1;
   size: number = 10;
   nbrPages: number = 1;
 
-  constructor( 
-    private titleService :Title,
-    private customerService:CustomerService,
-    private fb:FormBuilder,
+  constructor(
+    private customerService: CustomerService,
+    private fb: FormBuilder,
     private toastrService: ToastrService
-    ) { 
-
-    titleService.setTitle("Ebank- Customers");
-    this.searchForm = this.fb.group({
-      keyword: this.fb.control( "" )
-    })
-
+  ) {
+    
   }
 
   ngOnInit(): void {
     
-    this.getCustomers(this.page);
+    this.getCustomers( this.page );
 
-    // instead, can do next line :
-    // this.handleSearchSubmit();
-  
+    this.searchForm = this.fb.group({
+      keyword: this.fb.control(''),
+    });
+    this.selectedCustomerForm = this.fb.group({
+      customerId: this.fb.control(''),
+    });
+    
+    this.selectedCustomerSubject$ = this.selectedCustomerForm.valueChanges.subscribe({
+      next: value=>{
+        if( value.customerId )
+        this.selectedCustomerSubject.next( value.customerId )
+      }
+    })
+
   }
 
+  setSelectedCustomerName( customerName:string){
+    this.selectedCustomerName = customerName;
+  }
+  
   getCustomers( page:number){
     if( this.searchForm?.value.keyword.length>0){
       this.page = page;
@@ -67,9 +77,11 @@ export class CustomersComponent implements OnInit {
     )
   }
 
-
+  
   handleSearchSubmit(){
     let kw = <string>this.searchForm?.value.keyword;
+    this.selectedCustomerForm?.reset();
+    this.selectedCustomerForm?.setValue({ customerId: '' });
     this.customers = this.customerService.searchCustomersPaginated( kw, this.page, this.size ).pipe(
       tap((e)=>{ this.errorMessage="";
       this.nbrPages = e.totalPages;
@@ -85,39 +97,10 @@ export class CustomersComponent implements OnInit {
     )
   }
 
-  handleDeleteCustomer( customer:Customer){
-
-    const dialog = new MDCDialog(document.querySelector('.mdc-dialog')!);
-    
-    dialog.open();
-
-    dialog.listen('MDCDialog:closed', (e:any)=>{
-      if(e.detail.action=="delete"){
-
-        this.customerService.deleteCustomer(customer.id).subscribe({
-          next: any=>{
-            this.toastrService.success("","Customer deleted successfully !", { closeButton: true, positionClass: "toast-top-center", })
-            // this.handleSearchSubmit();
-            // instead of loading data again, we can simply let the the browser do the work !
-            this.customers = this.customers.pipe(
-              map(data=>{
-                let index = data.customers.indexOf(customer)
-                data.customers.slice( index, 1);
-                return data;
-              })
-            )
-          },
-          error: err=>{
-            this.toastrService.error("","Can't delete customer, could still have an account !", { closeButton: true, positionClass: "toast-top-center", })
-            console.error(err.message)
-          }
-        });
 
 
-      }
-    });
-
-    
+  ngOnDestroy(): void {
+    this.selectedCustomerSubject$?.unsubscribe();
   }
 
   range(currentPage: number, nbrPages: number) {
@@ -147,4 +130,5 @@ export class CustomersComponent implements OnInit {
     this.size = +size;
     this.handleSearchSubmit();
   }
+
 }

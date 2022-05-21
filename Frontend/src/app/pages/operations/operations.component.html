@@ -12,7 +12,7 @@
         aria-expanded="true"
         aria-controls="panelsStayOpen-collapseOne"
       >
-        <strong style="margin-right: 16px;">Accounts management : </strong> How it works ?
+        <strong style="margin-right: 16px;">Operations management : </strong> How it works ?
       </button>
     </h2>
     <div
@@ -24,7 +24,8 @@
       <div class="accordion-body bg-dark text-light">
         <ul>
           <li>search and choose a customer</li>
-          <li>then you can manage his accounts down below</li>
+          <li>down below that choose an account</li>
+          <li> And down below again, you'll find list of operations & what u need to manage them </li>
         </ul>
       </div>
     </div>
@@ -33,4 +34,4 @@
 
 <app-customers-card [selectedCustomerSubject]="selectedCustomerId" ></app-customers-card>
 
-<app-accounts-card [customerIdObs]="selectedCustomerId.asObservable()"  ></app-accounts-card>
+<app-accounts-card [selectedAccount]="selectedAccountId" [customerIdObs]="selectedCustomerId.asObservable()"  ></app-accounts-card>
