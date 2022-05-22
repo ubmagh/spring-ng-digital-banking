@@ -1,0 +1,129 @@
+<div class="accordion accordion-bg-dark bg-dark mt-0 pt-0 mb-2" id="operationsAccordionSampleHere">
+    <div class="accordion-item bg-dark text-white">
+        <h2 class="accordion-header bg-dark" id="operationsAccordionSampleHere-headingOne">
+            <button class="accordion-button collapsed bg-dark text-white" type="button" data-bs-toggle="collapse"
+                data-bs-target="#operationsAccordionSampleHere-collapseOne" aria-expanded="true"
+                aria-controls="operationsAccordionSampleHere-collapseOne">
+                <ng-container *ngIf="accountId.length == 0; else customerChosen">
+                    <span class="text-danger"> 3- Account opérations accounts ; Account not yet chosen 👀</span>
+                </ng-container>
+                <ng-template #customerChosen>
+                    <span class="text-primary"> 🚩⚾ Manage Account operations </span>
+                </ng-template>
+            </button>
+        </h2>
+        <div id="operationsAccordionSampleHere-collapseOne" class="accordion-collapse collapse" data-bs-toggle="collapse"
+            aria-labelledby="operationsAccordionSampleHere-headingOne">
+            <div class="accordion-body bg-dark text-light pb-3">
+                <ng-container *ngIf="accountId.length > 0; else chooseCustomerAccount">
+                    <div class="customerAccordioBody">
+                        <ng-container *ngIf="operations; else loadingOrFailure">
+                            <div class="row w-100 mt-2 mb-3">
+    
+                                <div class="w-100 text-center col">
+                                    <button class="btn btn-outline-success d-block mx-auto mt-2" data-bs-toggle="modal"
+                                        data-bs-target="#staticBackdrop">
+                                        <i class="bi bi-plus-square"></i>
+                                        Add a new operation for current account
+                                    </button>
+                                </div>
+                            </div>
+                            
+
+                            <table class="table table-dark table-hover text-center align-middle"
+                                style="overflow-y: auto; position: relative">
+                                <thead>
+                                    <tr>
+                                        <th><strong>ID</strong></th>
+                                        <th>Date</th>
+                                        <th>Amount 💸</th>
+                                        <th>Type</th>
+                                        <th>Description</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let operation of operations">
+                                        <td>{{ operation.id }}</td>
+                                        <td>{{ operation.operationDate| date }}</td>
+                                        <td class="text-success">
+                                            {{ operation.amount | currency }}
+                                        </td>
+                                        <td>{{ operation.type }}</td>
+                                        <td>{{ operation.description }}</td>
+                                        <td> 
+                                            <button class="btn btn-outline-info me-1"  title="edit" (click)="openEditModal( operation)"> <i class="bi bi-pencil-square"></i> </button>
+                                            <button class="btn btn-outline-danger ms-1" title="delete" (click)="confirmDelete( operation )" > <i class="bi bi-trash3"></i> </button>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="operations.length == 0">
+                                        <td colspan="6"><strong> No Operation found </strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </ng-container>
+
+                        <ng-template #loadingOrFailure>
+                            <ng-container *ngIf="errorMessage.length; else loading">
+                                <div class="alert alert-danger w-100 mx-4" role="alert">
+                                    <h4 class="alert-heading text-center display-2">
+                                        <i class="bi bi-exclamation-diamond"></i>
+                                    </h4>
+                                    <hr />
+                                    <p>{{ errorMessage }}</p>
+                                </div>
+                            </ng-container>
+                            <ng-template #loading>
+                                <div class="spinner-border text-warning text-center fs-1" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </ng-template>
+                        </ng-template>
+                    </div>
+
+                    <div class="mt-3 pb-2 row w-100 mx-0">
+                        <div class="col">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination">
+                                    <li class="page-item" [class.disabled]="page <= 1">
+                                        <a class="page-link" (click)="getOperations(page - 1)">
+                                            <i class="bi bi-caret-left-square-fill"></i>
+                                        </a>
+                                    </li>
+                                    <ng-container *ngFor="let i of range(page - 1, nbrPages)">
+                                        <li class="page-item" [class.active]="i == page - 1">
+                                            <a class="page-link" (click)="getOperations(i + 1)">
+                                                {{ i + 1 }}
+                                            </a>
+                                        </li>
+                                    </ng-container>
+                                    <li class="page-item" [class.disabled]="page >= nbrPages">
+                                        <a class="page-link" (click)="getOperations(page + 1)">
+                                            <i class="bi bi-caret-right-square-fill"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                        <div class="col text-end">
+                            <select class="form-select w-auto ms-auto" (change)="setSize(sizeSelect.value)" #sizeSelect
+                                aria-label="Default select example">
+                                <option [selected]="size == 1" value="1">1</option>
+                                <option [selected]="size == 2" value="2">2</option>
+                                <option [selected]="size == 5" value="5">5</option>
+                                <option [selected]="size == 10" value="10">10</option>
+                                <option [selected]="size == 25" value="25">25</option>
+                            </select>
+                            <small class="text-muted"> number of elements </small>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-template #chooseCustomerAccount>
+                    <div class="alert alert-info" role="alert">
+                        You have to select a customer, then select one of his accounts from the list above ! 👀👀
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>

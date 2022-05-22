@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { BankAccount } from '../models/account.model';
+import { Operation, OperationResponseObject } from '../models/operation.model';
 
 @Injectable()
 export class AccountService {
@@ -19,6 +20,20 @@ export class AccountService {
 
   public deleteAccount( accountId:string ) {
     return this.http.delete(environment.backendUrl+"/api/accounts/"+accountId);
+  }
+
+  public getAccount( accountId:string ): Observable<BankAccount> {
+    return this.http.get<BankAccount>(environment.backendUrl+"/api/accounts/"+accountId);
+  }
+
+
+  public getAccountOperationsPaginated( accountId :string, page:number, size :number ): Observable<OperationResponseObject>{
+    return this.http.get<OperationResponseObject>(environment.backendUrl+"/api/accounts/"+accountId+"/paginateOperations", {
+      params:{
+        page: page-1,
+        size
+      }
+    })
   }
 
 }

@@ -35,3 +35,5 @@
 <app-customers-card [selectedCustomerSubject]="selectedCustomerId" ></app-customers-card>
 
 <app-accounts-card [selectedAccount]="selectedAccountId" [customerIdObs]="selectedCustomerId.asObservable()"  ></app-accounts-card>
+
+<app-operations-card [AccountIdObs]="selectedAccountId.asObservable()"></app-operations-card>

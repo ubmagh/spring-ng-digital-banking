@@ -9,13 +9,15 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CustomersCardComponent } from './components/customers-card/customers-card.component';
 import { AccountsCardComponent } from './components/accounts-card/accounts-card.component';
+import { OperationsCardComponent } from './components/operations-card/operations-card.component';
 
 
 @NgModule({
   declarations: [
     OperationsComponent,
     CustomersCardComponent,
-    AccountsCardComponent
+    AccountsCardComponent,
+    OperationsCardComponent
   ],
   imports: [
     CommonModule,

@@ -7,6 +7,7 @@ import me.ubmagh.ng_spring_digital_banking.dtos.AccountOperationDTO;
 import me.ubmagh.ng_spring_digital_banking.entities.AccountOperation;
 import me.ubmagh.ng_spring_digital_banking.entities.BankAccount;
 import me.ubmagh.ng_spring_digital_banking.exceptions.BankAccountNotFoundExcetion;
+import me.ubmagh.ng_spring_digital_banking.exceptions.OperationNotFoundException;
 import me.ubmagh.ng_spring_digital_banking.mappers.AccountOperationMapper;
 import me.ubmagh.ng_spring_digital_banking.repositories.AccountOperationRepository;
 import me.ubmagh.ng_spring_digital_banking.repositories.BankAccountRepository;
@@ -50,5 +51,10 @@ public class AccountOperationServiceImpl implements AccountOperationService {
         accountHistoryDTO.setCurrentPage( page );
         accountHistoryDTO.setTotalPages(accountOperations.getTotalPages() );
         return accountHistoryDTO;
+    }
+
+    @Override
+    public AccountOperationDTO getOperation( long operationId) throws OperationNotFoundException {
+        return this.accountOperationMapper.fromAccountOperation( this.operationRepository.findById( operationId).orElseThrow( ()->  new OperationNotFoundException("Operation with id '"+operationId+"' wasn't found !") ) );
     }
 }
