@@ -153,7 +153,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         log.info("⏳ crediting bank account ...");
 
         AccountOperation operation = new AccountOperation();
-        operation.setType(OperationType.DEBIT);
+        operation.setType(OperationType.CREDIT);
         operation.setAmount(amount);
         operation.setOperationDate(new Date());
         operation.setDescription(description);
@@ -165,9 +165,9 @@ public class BankAccountServiceImpl implements BankAccountService {
     }
 
     @Override
-    public void transfer(String accountSourceId, String accountDestinationId, double amount) throws BankAccountNotFoundExcetion, BalanceNotSufficientException {
-        debit(accountSourceId, amount, "Transfer to (" + accountDestinationId + ")");
-        credit(accountDestinationId, amount, "Transfer from (" + accountSourceId + ")");
+    public void transfer(String accountSourceId, String accountDestinationId, double amount, String description) throws BankAccountNotFoundExcetion, BalanceNotSufficientException {
+        debit(accountSourceId, amount, description);
+        credit(accountDestinationId, amount, description);
     }
 
     @Override

@@ -1,11 +1,12 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, Subscription, tap } from 'rxjs';
+import { Observable, Subject, Subscription, tap } from 'rxjs';
 import { BankAccount } from 'src/app/models/account.model';
 import { Operation } from 'src/app/models/operation.model';
 import { AccountService } from 'src/app/services/account.service';
 import { CustomerService } from 'src/app/services/customer.service';
+import { OperationService } from 'src/app/services/operation.service';
 
 @Component({
   selector: 'app-operations-card',
@@ -24,14 +25,30 @@ export class OperationsCardComponent implements OnInit, OnDestroy {
   nbrPages: number = 1;
   operations: Operation[] = [];
 
+  operationType:string="debit";
 
+  createForm !:FormGroup;
+  submitting = false;
+  selectedCustomerId :Subject<string> = new Subject<string>();
+  selectedAccountId :Subject<string> = new Subject<string>();
+  selectedAccountSub$ ?:Subscription;
 
   constructor(
     private customerservice: CustomerService,
     private fb: FormBuilder,
     private toastr: ToastrService,
-    private accountService:AccountService
-  ) { }
+    private accountService:AccountService,
+    private operationService: OperationService
+  ) {
+    this.createForm =  this.fb.group({
+      amount: this.fb.control('', [
+        Validators.required, Validators.min(1)
+      ]),
+      description: this.fb.control('', [
+        Validators.required, Validators.minLength(3), Validators.maxLength(100)
+      ])
+    });
+   }
 
   ngOnInit(): void {
     this.AccountIdSub$ = this.AccountIdObs.subscribe({
@@ -80,6 +97,7 @@ export class OperationsCardComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.AccountIdSub$?.unsubscribe();
+    this.selectedAccountSub$?.unsubscribe();
   }
 
   range(currentPage: number, nbrPages: number) {
@@ -110,36 +128,104 @@ export class OperationsCardComponent implements OnInit, OnDestroy {
     this.getOperations(this.page);
   }
 
-  openEditModal( operation:Operation){
-    /*
-    if( operation.type=="SavingAccount" ){
-      this.editForm = this.fb.group({
-        status: this.fb.control(operation.status), // intial value
-        interestRate: this.fb.control(operation.interestRate, [
-          Validators.required
+
+  setSelectedOpType( newType:string){
+    if( newType=='debit'|| newType=='credit'){
+      this.selectedAccountSub$?.unsubscribe();
+      this.createForm =  this.fb.group({
+        amount: this.fb.control('', [
+          Validators.required, Validators.min(1)
+        ]),
+        description: this.fb.control('', [
+          Validators.required, Validators.minLength(3), Validators.maxLength(100)
         ])
       });
-    }else{
-      this.editForm = this.fb.group({
-        status: this.fb.control(operation.status), // intial value
-        overDraft: this.fb.control(operation.overDraft, [
+    } else{
+      
+      this.createForm =  this.fb.group({
+        amount: this.fb.control('', [
+          Validators.required, Validators.min(1)
+        ]),
+        description: this.fb.control('', [
+          Validators.required, Validators.minLength(3), Validators.maxLength(100)
+        ]),
+        detinationAccountId: this.fb.control('', [
           Validators.required
-        ])
+        ]),
       });
+
+      this.selectedAccountSub$ = this.selectedAccountId.subscribe({
+        next: accountId=>{
+          this.createForm.setValue({
+            amount : this.createForm.value?.amount,
+            description : this.createForm.value?.description,
+            detinationAccountId : accountId
+          })
+        }
+      })
     }
-    this.editFormSelectedType = operation.type;
-    this.edittedAccount = operation;
-    document.getElementById('toggleEditModalBtn')?.click();
-    */
+    this.operationType = newType;
   }
 
-  confirmDelete( operation:Operation ){
-    /*
-    this.deletedAccount = account;
-    document.getElementById("toggleDeleteModalBtn")?.click();
-    */
+
+
+  handleCreateFormSubmit(){
+
+    this.submitting=true;
+    
+  
+    if( this.operationType=="debit" ){
+      this.operationService.debit( this.accountId, +this.createForm.value.amount, this.createForm.value.description ).subscribe({
+        next: any=>{
+          this.toastr.success( '', 'Debit Operation saved successfully!', { closeButton: true, positionClass: "toast-top-center" });
+          this.createForm.reset();
+          this.operationType ="debit"
+          this.submitting=false;
+          document.getElementById("closeModal22")?.click();
+          this.getOperations(this.page);
+        },
+        error: err=>{
+          this.toastr.error( '', 'Operation could not be saved, balance unsufficient or maybe an error happened !', { closeButton: true, positionClass: "toast-top-center", });
+          this.submitting=false;
+        }
+      })
+    } else
+    if( this.operationType=="credit" ){
+      this.operationService.credit( this.accountId, +this.createForm.value.amount, this.createForm.value.description ).subscribe({
+        next: any=>{
+          this.toastr.success( '', 'Credit Operation saved successfully!', { closeButton: true, positionClass: "toast-top-center" });
+          this.createForm.reset();
+          this.operationType ="debit"
+          this.submitting=false;
+          document.getElementById("closeModal22")?.click();
+          this.getOperations(this.page);
+        },
+        error: err=>{
+          this.toastr.error( '', 'Operation could not be saved, an error happened !', { closeButton: true, positionClass: "toast-top-center", });
+          this.submitting=false;
+        }
+      })
+    } else
+    if( this.operationType=="transfert" ){
+      this.operationService.transfert( this.accountId, this.createForm.value.detinationAccountId, +this.createForm.value.amount, this.createForm.value.description ).subscribe({
+        next: any=>{
+          this.toastr.success( '', 'Operation of transfer saved successfully!', { closeButton: true, positionClass: "toast-top-center" });
+          this.createForm.reset();
+          this.operationType ="debit"
+          this.submitting=false;
+          document.getElementById("closeModal22")?.click();
+          this.getOperations(this.page);
+        },
+        error: err=>{
+          this.toastr.error( '', 'Operation could not be saved, balance unsufficient or maybe an error happened !', { closeButton: true, positionClass: "toast-top-center", });
+          this.submitting=false;
+        }
+      })
+    }
   }
 
+  
 
 
 }
+

@@ -52,8 +52,8 @@ public class OperationRestController {
         accountService.transfer(
                 transferRequestDTO.getAccountSourceId(),
                 transferRequestDTO.getAccountDestinationId(),
-                transferRequestDTO.getAmount()
-                // transferRequestDTO.getDescription() // todo : to add
+                transferRequestDTO.getAmount(),
+                transferRequestDTO.getDescription()
         );
         return transferRequestDTO;
 

@@ -22,7 +22,7 @@
     
                                 <div class="w-100 text-center col">
                                     <button class="btn btn-outline-success d-block mx-auto mt-2" data-bs-toggle="modal"
-                                        data-bs-target="#staticBackdrop">
+                                        data-bs-target="#createOperationModal">
                                         <i class="bi bi-plus-square"></i>
                                         Add a new operation for current account
                                     </button>
@@ -39,7 +39,6 @@
                                         <th>Amount 💸</th>
                                         <th>Type</th>
                                         <th>Description</th>
-                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -51,13 +50,9 @@
                                         </td>
                                         <td>{{ operation.type }}</td>
                                         <td>{{ operation.description }}</td>
-                                        <td> 
-                                            <button class="btn btn-outline-info me-1"  title="edit" (click)="openEditModal( operation)"> <i class="bi bi-pencil-square"></i> </button>
-                                            <button class="btn btn-outline-danger ms-1" title="delete" (click)="confirmDelete( operation )" > <i class="bi bi-trash3"></i> </button>
-                                        </td>
                                     </tr>
                                     <tr *ngIf="operations.length == 0">
-                                        <td colspan="6"><strong> No Operation found </strong></td>
+                                        <td colspan="5"><strong> No Operation found </strong></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -127,3 +122,139 @@
         </div>
     </div>
 </div>
+
+
+
+
+
+
+<!-- create Modal -->
+<div class="modal fade" id="createOperationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="createOperationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" [class.modal-lg]="operationType!='transfert'" [class.modal-xl]="operationType=='transfert'">
+        <div class="modal-content bg-dark text-white">
+            <form [formGroup]="createForm" (ngSubmit)="handleCreateFormSubmit()">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createOperationModalLabel">
+                        Create a new operation
+                    </h5>
+                    <button type="button" class="btn-close text-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-3">
+                    <div class="mb-3 row col-10 mx-auto">
+                        
+                        <div class="col-12 mb-1">
+                            <label> Operation type : </label>
+                        </div>
+                        <div class="form-check col ms-5 mb-3">
+                            <input class="form-check-input" type="radio" (click)="setSelectedOpType('debit')"
+                                value="debit" id="flexRadioDefault1" [checked]="operationType=='debit'" />
+                            <label class="form-check-label" for="flexRadioDefault1" (click)="setSelectedOpType('debit')">
+                                Debit
+                            </label>
+                        </div>
+                        <div class="form-check col mb-3">
+                            <input class="form-check-input" type="radio" (click)="setSelectedOpType('credit')" [checked]="operationType=='credit'"
+                                value="credit" id="flexRadioDefault2" />
+                            <label class="form-check-label" for="flexRadioDefault2"
+                                (click)="setSelectedOpType('credit')">
+                                Credit
+                            </label>
+                        </div>
+                        <div class="form-check col mb-3">
+                            <input class="form-check-input" type="radio" (click)="setSelectedOpType('transfert')" [checked]="operationType=='transfert'"
+                                value="transfert" id="flexRadioDefault3" />
+                            <label class="form-check-label" for="flexRadioDefault3"
+                                (click)="setSelectedOpType('transfert')">
+                                Transfert
+                            </label>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="balance" class="form-label">
+                                Amount :
+                            </label>
+                            <input type="number" class="form-control" id="amount" formControlName="amount"
+                                [class.is-valid]="
+                  createForm.get('amount')!.valid &&
+                  (createForm.get('amount')!.dirty ||
+                    createForm.get('amount')!.touched)
+                " [class.is-invalid]="
+                  createForm.get('amount')!.invalid &&
+                  (createForm.get('amount')!.dirty ||
+                    createForm.get('amount')!.touched)
+                " class="form-control" id="amount" />
+                            <ng-container *ngIf="createForm.get('amount')!.touched">
+                                <small class="text-danger d-block"
+                                    *ngIf="createForm.get('amount')!.hasError('required')">
+                                    💸 Operation amount is required !
+                                </small>
+                                <small class="text-danger d-block"
+                                    *ngIf="createForm.get('amount')!.hasError('min')">
+                                    💸 Operation amount is invalid !
+                                </small>
+                            </ng-container>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">
+                                Description :
+                            </label>
+
+                            <textarea class="form-control" id="description" [class.is-valid]="
+                  createForm.get('description')!.valid &&
+                  (createForm.get('description')!.dirty ||
+                    createForm.get('description')!.touched)
+                " [class.is-invalid]="
+                  createForm.get('description')!.invalid &&
+                  (createForm.get('description')!.dirty ||
+                    createForm.get('description')!.touched)
+                " formControlName="description" rows="4" ></textarea>
+                            <ng-container *ngIf="createForm.get('description')!.touched">
+                                <small class="text-danger d-block"
+                                    *ngIf="createForm.get('description')!.hasError('required')">
+                                    ⚠ Enter a description for your operation
+                                </small>
+                                <small class="text-danger d-block"
+                                    *ngIf="createForm.get('description')!.hasError('minlength')">
+                                    ‼ short description
+                                </small>
+                                <small class="text-danger d-block"
+                                    *ngIf="createForm.get('description')!.hasError('maxlength')">
+                                    😅⚠ Very long description
+                                </small>
+                            </ng-container>
+                        </div>
+
+
+                        <div class="mb-3" *ngIf="operationType == 'transfert'">
+                            <label for="" class="form-label"> Destination account : </label>
+
+                            <div class="w-100 p-0 m-2">
+                                <app-customers-card [selectedCustomerSubject]="selectedCustomerId" ></app-customers-card>
+                                <app-accounts-card [selectedAccount]="selectedAccountId" [customerIdObs]="selectedCustomerId.asObservable()"  ></app-accounts-card>
+                            </div>
+                            
+                            <ng-container>
+                                <small class="text-danger d-block"
+                                    *ngIf="createForm.get('detinationAccountId')!.hasError('required')">
+                                    Please choose the destination Account, it is required !
+                                </small>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeModal22">
+                        <i class="bi bi-x-circle"></i> Close
+                    </button>
+                    <button type="submit" class="btn btn-success" [disabled]="!createForm.valid || submitting">
+                        <i class="bi bi-plus-square"></i> save operation
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

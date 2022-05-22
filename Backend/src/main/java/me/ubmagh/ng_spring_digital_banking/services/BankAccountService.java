@@ -30,7 +30,7 @@ public interface BankAccountService {
 
     void credit( String accountId, double amount, String description) throws BankAccountNotFoundExcetion;
 
-    void transfer( String accountSourceId, String accountDestinationId, double amount) throws BankAccountNotFoundExcetion, BalanceNotSufficientException;
+    void transfer( String accountSourceId, String accountDestinationId, double amount, String description) throws BankAccountNotFoundExcetion, BalanceNotSufficientException;
 
     List<BankAccount> listBankAccount();
 

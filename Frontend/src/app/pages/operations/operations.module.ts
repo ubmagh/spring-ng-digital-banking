@@ -10,6 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CustomersCardComponent } from './components/customers-card/customers-card.component';
 import { AccountsCardComponent } from './components/accounts-card/accounts-card.component';
 import { OperationsCardComponent } from './components/operations-card/operations-card.component';
+import { OperationService } from 'src/app/services/operation.service';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { OperationsCardComponent } from './components/operations-card/operations
   ],
   providers:[
     CustomerService,
-    AccountService
+    AccountService,
+    OperationService
   ]
 })
 export class OperationsModule { }
