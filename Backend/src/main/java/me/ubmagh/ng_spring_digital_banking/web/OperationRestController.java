@@ -11,6 +11,7 @@ import me.ubmagh.ng_spring_digital_banking.exceptions.BankAccountNotFoundExcetio
 import me.ubmagh.ng_spring_digital_banking.exceptions.OperationNotFoundException;
 import me.ubmagh.ng_spring_digital_banking.services.AccountOperationService;
 import me.ubmagh.ng_spring_digital_banking.services.BankAccountService;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,11 +25,13 @@ public class OperationRestController {
     private AccountOperationService operationService;
     private BankAccountService accountService;
 
+    @PostAuthorize("hasAuthority('USER')")
     @GetMapping("/operations/{id}")
     public AccountOperationDTO getOperation( @PathVariable("id") long operationId) throws OperationNotFoundException {
         return operationService.getOperation( operationId);
     }
 
+    @PostAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/operations/debit")
     public DebitDTO debiter( @RequestBody DebitDTO debitDTO) throws BankAccountNotFoundExcetion, BalanceNotSufficientException {
 
@@ -37,6 +40,7 @@ public class OperationRestController {
 
     }
 
+    @PostAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/operations/credit")
     public CreditDTO credit(@RequestBody CreditDTO creditDTO) throws BankAccountNotFoundExcetion {
 
@@ -45,7 +49,7 @@ public class OperationRestController {
 
     }
 
-
+    @PostAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/operations/transfer")
     public TransferRequestDTO transferer(@RequestBody TransferRequestDTO transferRequestDTO) throws BankAccountNotFoundExcetion, BalanceNotSufficientException {
 

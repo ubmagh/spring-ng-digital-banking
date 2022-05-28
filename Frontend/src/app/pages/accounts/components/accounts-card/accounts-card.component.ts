@@ -201,7 +201,7 @@ export class AccountsCardComponent implements OnInit, OnDestroy {
         document.getElementById('closeModal3')?.click();
       },
       error: err=>{
-        this.toastr.error( '', 'Account could not be deleted, There could be operations related to it !', { closeButton: true, positionClass: "toast-top-center", });
+        this.toastr.error( '', 'Account could not be deleted, an error happened (check your console) !', { closeButton: true, positionClass: "toast-top-center", });
         this.submitting=false;
         document.getElementById('closeModal3')?.click();
         console.error(err.message)

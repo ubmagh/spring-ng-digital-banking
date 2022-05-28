@@ -33,7 +33,7 @@ public class BankAccount { // this class should be abstract in case of  "table p
     @Enumerated(EnumType.STRING)
     private AccountStatus status;
 
-    @OneToMany(mappedBy = "bankAccount", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "bankAccount", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<AccountOperation> accountAccountOperations = new ArrayList<>();
 
 }

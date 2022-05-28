@@ -10,6 +10,9 @@ import me.ubmagh.ng_spring_digital_banking.exceptions.CustomerNotFoundException;
 import me.ubmagh.ng_spring_digital_banking.repositories.BankAccountRepository;
 import me.ubmagh.ng_spring_digital_banking.repositories.CustomerRepository;
 import me.ubmagh.ng_spring_digital_banking.repositories.AccountOperationRepository;
+import me.ubmagh.ng_spring_digital_banking.security.entities.AppRole;
+import me.ubmagh.ng_spring_digital_banking.security.entities.AppUser;
+import me.ubmagh.ng_spring_digital_banking.security.service.SecurityService;
 import me.ubmagh.ng_spring_digital_banking.services.BankAccountService;
 import me.ubmagh.ng_spring_digital_banking.services.BankService;
 import me.ubmagh.ng_spring_digital_banking.services.CustomerService;
@@ -17,15 +20,40 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @SpringBootApplication
+@EnableGlobalMethodSecurity( prePostEnabled = true, securedEnabled = true)
 public class NgSpringDigitalBankingApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(NgSpringDigitalBankingApplication.class, args);
+	}
+
+	@Bean
+	PasswordEncoder passwordEncoder(){
+		return new BCryptPasswordEncoder();
+	}
+
+	// @Bean
+	CommandLineRunner instanciate_user(SecurityService securityService){
+		return args -> {
+			securityService.addNewRole(new AppRole(null,"USER"));
+			securityService.addNewRole(new AppRole(null,"ADMIN"));
+			securityService.addNewUser( new AppUser( null, "user", "12345", new ArrayList<>()));
+			securityService.addNewUser( new AppUser( null, "admin", "12345", new ArrayList<>()));
+
+			securityService.addRoleToUser( "user", "USER");
+			securityService.addRoleToUser( "admin", "USER");
+			securityService.addRoleToUser( "admin", "ADMIN");
+
+		};
 	}
 
 	// @Bean

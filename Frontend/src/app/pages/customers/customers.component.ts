@@ -108,7 +108,7 @@ export class CustomersComponent implements OnInit {
             )
           },
           error: err=>{
-            this.toastrService.error("","Can't delete customer, could still have an account !", { closeButton: true, positionClass: "toast-top-center", })
+            this.toastrService.error("","Can't delete customer, an error happened (console) !", { closeButton: true, positionClass: "toast-top-center", })
             console.error(err.message)
           }
         });

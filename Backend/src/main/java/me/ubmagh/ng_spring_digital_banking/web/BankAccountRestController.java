@@ -9,6 +9,8 @@ import me.ubmagh.ng_spring_digital_banking.mappers.BankAccountMapper;
 import me.ubmagh.ng_spring_digital_banking.services.AccountOperationService;
 import me.ubmagh.ng_spring_digital_banking.services.BankAccountService;
 import me.ubmagh.ng_spring_digital_banking.services.CustomerService;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,20 +29,24 @@ public class BankAccountRestController {
 
 
     @GetMapping("/accounts/{accountId}")
+    @PreAuthorize("hasAuthority('USER')")
     public BankAccountDTO getBankAccount(@PathVariable("accountId") String accountId) throws BankAccountNotFoundExcetion {
         return bankAccountService.getBankAccount(accountId);
     }
 
     @GetMapping("/accounts")
+    @PostAuthorize("hasAuthority('USER')")
     public List<BankAccountDTO> accountsList() {
         return bankAccountService.listBankAccountDto();
     }
 
     @GetMapping("/accounts/{accountId}/operations")
+    @PostAuthorize("hasAuthority('USER')")
     public List<AccountOperationDTO> getHistory(@PathVariable("accountId") String accountId) {
         return operationService.getAccountOperationsHistory(accountId);
     }
 
+    @PostAuthorize("hasAuthority('USER')")
     @GetMapping("/accounts/{accountId}/paginateOperations")
     public AccountHistoryDTO getAccountHistory(
             @PathVariable("accountId") String accountId,
@@ -50,6 +56,7 @@ public class BankAccountRestController {
         return operationService.getAccountHistory(accountId, page, size);
     }
 
+    @PostAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/accounts")
     public BankAccountDTO saveBankAccount(@RequestBody BankAccountRequestDTO accountRequestDTO) throws CustomerNotFoundException {
         BankAccountDTO dto;
@@ -71,6 +78,7 @@ public class BankAccountRestController {
         return dto;
     }
 
+    @PostAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/accounts/{id}")
     public BankAccountDTO updateBankAccount(@PathVariable(name = "id") String accountId, @RequestBody BankAccountRequestDTO accountRequestDTO) throws BankAccountNotFoundExcetion {
         accountRequestDTO.setId(accountId);
@@ -84,6 +92,7 @@ public class BankAccountRestController {
         );
     }
 
+    @PostAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/accounts/{id}")
     public void deleteBankAccount(@PathVariable(name = "id") String accountId ) throws BankAccountNotFoundExcetion {
          bankAccountService.deleteAccount( accountId );
