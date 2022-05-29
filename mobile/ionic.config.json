@@ -1,0 +1,7 @@
+{
+  "name": "ebanking",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
