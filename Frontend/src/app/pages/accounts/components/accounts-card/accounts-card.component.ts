@@ -10,6 +10,7 @@ import { BankAccount } from 'src/app/models/account.model';
 import { Customer } from 'src/app/models/customer.model';
 import { AccountService } from 'src/app/services/account.service';
 import { CustomerService } from 'src/app/services/customer.service';
+import { SecurityService } from 'src/app/services/security.service';
 
 @Component({
   selector: 'app-accounts-card',
@@ -41,11 +42,15 @@ export class AccountsCardComponent implements OnInit, OnDestroy {
 
   deletedAccount ?:BankAccount;
 
+  isAdmin = false;
+  securityServicSub$ ?: Subscription;
+
   constructor(
     private customerservice: CustomerService,
     private fb: FormBuilder,
     private toastr: ToastrService,
-    private accountService:AccountService
+    private accountService:AccountService,
+    private securityService:SecurityService
   ) {
     this.onSavingAccountSelected();
     this.editForm = this.fb.group({
@@ -54,6 +59,15 @@ export class AccountsCardComponent implements OnInit, OnDestroy {
         Validators.required
       ])
     });
+
+    this.securityServicSub$ = this.securityService.userSubject.subscribe({
+      next: user=>{
+        this.isAdmin = user?.roles.find(e=>e.roleName=="ADMIN")!=undefined;
+      }, 
+      error: err=>{
+        this.isAdmin = false;
+      }
+    })
   }
 
   onCurrentAccountSelected() {
@@ -113,6 +127,9 @@ export class AccountsCardComponent implements OnInit, OnDestroy {
   } 
 
   ngOnInit(): void {
+    this.isAdmin = this.securityService.user?.roles.find(e=>e.roleName=="ADMIN")!=undefined;
+
+
     this.customerIdObs$ = this.customerIdObs.subscribe({
       next: (customerId) => {
         this.customerId = customerId;
@@ -210,6 +227,7 @@ export class AccountsCardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.securityServicSub$?.unsubscribe();
     this.customerIdObs$?.unsubscribe();
   }
 

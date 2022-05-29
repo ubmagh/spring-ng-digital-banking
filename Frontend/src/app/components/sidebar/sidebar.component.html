@@ -50,7 +50,7 @@
                   List of customers
                 </a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" *ngIf="isAdmin">
                 <a
                   routerLink="/customers/new"
                   routerLinkActive="active"

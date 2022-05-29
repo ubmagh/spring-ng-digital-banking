@@ -4,12 +4,13 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { CustomerAccountResponse } from '../models/account.model';
 import { Customer, CustomersPaginated } from '../models/customer.model';
+import { SecurityService } from './security.service';
 
 @Injectable()
 export class CustomerService {
 
-  constructor( private http:HttpClient) {
-
+  
+  constructor( private http:HttpClient, private securityService: SecurityService) {
   }
 
 
@@ -48,11 +49,11 @@ export class CustomerService {
   } 
 
   public deleteCustomer( customerid :string ){
-    return this.http.delete(environment.backendUrl+"/api/customers/"+customerid );
+    return this.http.delete(environment.backendUrl+"/api/customers/"+customerid);
   }
 
   public getCustomer( customerId:string) : Observable<Customer>{
-    return this.http.get<Customer>(environment.backendUrl+"/api/customers/"+customerId );
+    return this.http.get<Customer>(environment.backendUrl+"/api/customers/"+customerId);
   }
 
   public updateCustomer( customerId:string, customer:Customer) : Observable<Customer>{

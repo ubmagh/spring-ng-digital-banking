@@ -12,6 +12,7 @@ import me.ubmagh.ng_spring_digital_banking.security.entities.AppRole;
 import me.ubmagh.ng_spring_digital_banking.security.entities.AppUser;
 import me.ubmagh.ng_spring_digital_banking.security.service.SecurityService;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 @RestController
 @Slf4j
 @AllArgsConstructor
+@CrossOrigin("*")
 public class SecurityRestController {
 
     private SecurityService securityService;

@@ -19,9 +19,15 @@
                 </div>
             </div>
         </div>
-        <div class="card-footer text-primary text-center">
+        <div class="card-footer text-primary text-center" *ngIf="!authenticated; else seeFeatures">
             <h5 class="h5 fw-bold"> You should authenticate to use this app's features ! </h5>
         </div>
+        <ng-template #seeFeatures>
+            <div class="card-footer text-success text-center" *ngIf="authenticated; else seeFeatures">
+                <h5 class="h5 fw-bold"> You are authenticated now, you can navigate feautures throght left side menu ! </h5>
+            </div>
+        </ng-template>
+
     </div>
 
 </div>

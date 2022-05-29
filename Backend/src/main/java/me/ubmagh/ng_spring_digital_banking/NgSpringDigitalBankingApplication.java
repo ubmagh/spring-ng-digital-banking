@@ -29,7 +29,6 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @SpringBootApplication
-@EnableGlobalMethodSecurity( prePostEnabled = true, securedEnabled = true)
 public class NgSpringDigitalBankingApplication {
 
 	public static void main(String[] args) {

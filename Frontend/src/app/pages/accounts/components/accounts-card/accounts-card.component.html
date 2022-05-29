@@ -24,7 +24,7 @@
                                     accounts list :
                                 </div>
     
-                                <div class="w-100 text-center col">
+                                <div class="w-100 text-center col" *ngIf="isAdmin">
                                     <button class="btn btn-outline-success d-block ms-auto mt-2" data-bs-toggle="modal"
                                         data-bs-target="#staticBackdrop">
                                         <i class="bi bi-plus-square"></i>
@@ -44,7 +44,7 @@
                                         <th>Opened at</th>
                                         <th>Status</th>
                                         <th>Other information 🤔</th>
-                                        <th>Actions</th>
+                                        <th *ngIf="isAdmin">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -70,13 +70,13 @@
                                                 <span class="badge text-bg-secondary"> overDraft : {{ account.overDraft }} </span>
                                             </ng-template>
                                         </td>
-                                        <td> 
+                                        <td *ngIf="isAdmin"> 
                                             <button class="btn btn-outline-info me-1"  title="edit" (click)="openEditModal( account)"> <i class="bi bi-pencil-square"></i> </button>
                                             <button class="btn btn-outline-danger ms-1" title="delete" (click)="confirmDelete( account )" > <i class="bi bi-trash3"></i> </button>
                                         </td>
                                     </tr>
                                     <tr *ngIf="accounts.length == 0">
-                                        <td colspan="6"><strong> No costumer found </strong></td>
+                                        <td [colSpan]="isAdmin?6:5"><strong> No costumer found </strong></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -148,7 +148,7 @@
 </div>
 
 <!-- create Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+<div *ngIf="isAdmin" class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content bg-dark text-white">
@@ -282,11 +282,11 @@
 
 
 <!-- Button trigger edit-modal -->
-<button type="button" class="d-none btn btn-primary" id="toggleEditModalBtn" data-bs-toggle="modal" data-bs-target="#editStaticBackdrop">
+<button *ngIf="isAdmin" type="button" class="d-none btn btn-primary" id="toggleEditModalBtn" data-bs-toggle="modal" data-bs-target="#editStaticBackdrop">
     😅😅
 </button>
 <!-- edit Modal -->
-<div class="modal fade" id="editStaticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+<div *ngIf="isAdmin" class="modal fade" id="editStaticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="editStaticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content bg-dark text-white">
@@ -384,11 +384,11 @@
 
 
 <!-- Button trigger edit-modal -->
-<button type="button" class="d-none btn btn-primary" id="toggleDeleteModalBtn" data-bs-toggle="modal" data-bs-target="#deleteStaticBackdrop">
+<button *ngIf="isAdmin" type="button" class="d-none btn btn-primary" id="toggleDeleteModalBtn" data-bs-toggle="modal" data-bs-target="#deleteStaticBackdrop">
     😅😅
 </button>
 <!-- edit Modal -->
-<div class="modal fade" id="deleteStaticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+<div *ngIf="isAdmin" class="modal fade" id="deleteStaticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="deleteStaticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content bg-dark text-white">

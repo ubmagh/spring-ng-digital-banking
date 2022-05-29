@@ -1,0 +1,55 @@
+<div class="mt-3 mb-5 card bg-dark">
+    <div class="card-header">
+        <h1 class="text-center h1 display-5 text-white">Login</h1>
+    </div>
+    <form [formGroup]="loginForm" (submit)="handleLoginSubmit()">
+        <div class="card-body text-white">
+            <div class="col-8 mx-auto">
+                <div class="mb-3">
+                    <label for="username" class="form-label fw-bold"> username : </label>
+                    <input type="text" name="username" formControlName="username" class="form-control" id="username"
+                        [class.is-valid]="
+              loginForm.get('username')!.valid &&
+              (loginForm.get('username')!.dirty || loginForm.get('username')!.touched)
+            " [class.is-invalid]="
+              loginForm.get('username')!.invalid &&
+              (loginForm.get('username')!.dirty || loginForm.get('username')!.touched)
+            " />
+                    <ng-container *ngIf="loginForm.get('username')!.touched">
+                        <small class="text-danger d-block" *ngIf="loginForm.get('username')!.hasError('required')">
+                            🤔 username is required
+                        </small>
+                        <small class="text-danger d-block" *ngIf="loginForm.get('username')!.hasError('minlength')">
+                            👾 username is invalid !
+                        </small>
+                    </ng-container>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label fw-bold"> password : </label>
+                    <input type="password" name="password" formControlName="password" class="form-control" id="password"
+                        [class.is-valid]="
+              loginForm.get('password')!.valid &&
+              (loginForm.get('password')!.dirty || loginForm.get('password')!.touched)
+            " [class.is-invalid]="
+              loginForm.get('password')!.invalid &&
+              (loginForm.get('password')!.dirty || loginForm.get('password')!.touched)
+            " />
+                    <ng-container *ngIf="loginForm.get('password')!.touched">
+                        <small class="text-danger d-block" *ngIf="loginForm.get('password')!.hasError('required')">
+                            🧨 passowrd is required
+                        </small>
+                        <small class="text-danger d-block" *ngIf="loginForm.get('password')!.hasError('minlength')">
+                            ♦ password is invalid !
+                        </small>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer py-3">
+            <button class="btn btn-outline-light action-button d-block mx-auto px-4 py-2" [class.disabled]="!loginForm.valid||submitting" type="submit" [disabled]="!loginForm.valid||submitting">
+                <i class="bi bi-box-arrow-in-right"></i> sign-in
+            </button>
+        </div>
+    </form>
+</div>

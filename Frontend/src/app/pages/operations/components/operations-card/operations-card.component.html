@@ -18,7 +18,7 @@
                 <ng-container *ngIf="accountId.length > 0; else chooseCustomerAccount">
                     <div class="customerAccordioBody">
                         <ng-container *ngIf="operations; else loadingOrFailure">
-                            <div class="row w-100 mt-2 mb-3">
+                            <div class="row w-100 mt-2 mb-3" *ngIf="isAdmin">
     
                                 <div class="w-100 text-center col">
                                     <button class="btn btn-outline-success d-block mx-auto mt-2" data-bs-toggle="modal"
@@ -129,7 +129,7 @@
 
 
 <!-- create Modal -->
-<div class="modal fade" id="createOperationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+<div *ngIf="isAdmin" class="modal fade" id="createOperationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="createOperationModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" [class.modal-lg]="operationType!='transfert'" [class.modal-xl]="operationType=='transfert'">
         <div class="modal-content bg-dark text-white">

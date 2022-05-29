@@ -1,33 +1,38 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ToastrService } from 'ngx-toastr';
-import { catchError, map, Observable, tap, throwError } from 'rxjs';
+import { catchError, map, Observable, Subscription, tap, throwError } from 'rxjs';
 import { Customer, CustomersPaginated } from 'src/app/models/customer.model';
 import { CustomerService } from 'src/app/services/customer.service';
 import { MDCDialog } from '@material/dialog';
 import { Router } from '@angular/router';
+import { SecurityService } from 'src/app/services/security.service';
 
 @Component({
   selector: 'app-customers',
   templateUrl: './customers.component.html',
   styleUrls: ['./customers.component.sass']
 })
-export class CustomersComponent implements OnInit {
+export class CustomersComponent implements OnInit, OnDestroy {
 
   customers !: Observable<CustomersPaginated>;
   errorMessage :string ="";
   searchForm ?: FormGroup;
+  userSub$ ?: Subscription
 
   page: number = 1;
   size: number = 10;
   nbrPages: number = 1;
 
+  userIsAdmin=false;
+
   constructor( 
     private titleService :Title,
     private customerService:CustomerService,
     private fb:FormBuilder,
-    private toastrService: ToastrService
+    private toastrService: ToastrService,
+    private securityService: SecurityService
     ) { 
 
     titleService.setTitle("Ebank- Customers");
@@ -35,6 +40,12 @@ export class CustomersComponent implements OnInit {
       keyword: this.fb.control( "" )
     })
 
+    this.userIsAdmin = securityService.user?.roles.find(e=>e.roleName=='ADMIN')!=undefined;
+    this.userSub$ = this.securityService.userSubject.subscribe({
+      next: user=>{
+        this.userIsAdmin = user?.roles.find(e=>e.roleName=='ADMIN')!=undefined;
+      }
+    })
   }
 
   ngOnInit(): void {
@@ -43,7 +54,8 @@ export class CustomersComponent implements OnInit {
 
     // instead, can do next line :
     // this.handleSearchSubmit();
-  
+    this.userIsAdmin = this.securityService.user?.roles.find(e=>e.roleName=='ADMIN')!=undefined;
+    
   }
 
   getCustomers( page:number){
@@ -146,5 +158,9 @@ export class CustomersComponent implements OnInit {
   setSize(size: string) {
     this.size = +size;
     this.handleSearchSubmit();
+  }
+
+  ngOnDestroy(): void {
+    this.userSub$?.unsubscribe();
   }
 }

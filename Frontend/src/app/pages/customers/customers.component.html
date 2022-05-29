@@ -30,7 +30,7 @@
                         <th> ID </th>
                         <th> Name </th>
                         <th> Email </th>
-                        <th> <strong>Actions</strong> </th>
+                        <th *ngIf="userIsAdmin"> <strong>Actions</strong> </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,13 +38,13 @@
                         <td> {{ customer.id }} </td>
                         <td> {{ customer.name }} </td>
                         <td> {{ customer.email }} </td>
-                        <td> 
+                        <td *ngIf="userIsAdmin"> 
                             <a class="btn btn-outline-info me-1" [routerLink]="['edit', customer.id]" title="edit"> <i class="bi bi-pencil-square"></i> </a>
                             <button class="btn btn-outline-danger ms-1" title="delete" (click)="handleDeleteCustomer( customer)" > <i class="bi bi-trash3"></i> </button>
                         </td>
                     </tr>
                     <tr *ngIf="customersList.customers.length==0" >
-                        <td colspan="4"> <strong> No costumer found </strong> </td>
+                        <td [colSpan]="userIsAdmin?4:3"> <strong> No costumer found </strong> </td>
                     </tr>
                 </tbody>
             </table>

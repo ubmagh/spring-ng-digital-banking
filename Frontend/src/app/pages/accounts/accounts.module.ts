@@ -5,10 +5,11 @@ import { AccountsRoutingModule } from './accounts-routing.module';
 import { AccountsComponent } from './accounts.component';
 import { CustomersCardComponent } from './components/customers-card/customers-card.component';
 import { CustomerService } from 'src/app/services/customer.service';
-import {  HttpClientModule } from '@angular/common/http';
+import {  HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AccountsCardComponent } from './components/accounts-card/accounts-card.component';
 import { AccountService } from 'src/app/services/account.service';
+import { TokenInterceptorProvider } from 'src/app/interceptors/tokenInterceptor';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { AccountService } from 'src/app/services/account.service';
   ],
   providers:[
     CustomerService,
-    AccountService
+    AccountService,
+    TokenInterceptorProvider
   ]
 })
 export class AccountsModule { }

@@ -1,16 +1,43 @@
 <header class="p-3 bg-dark text-white">
     <div class="container-fluid">
         <div class="d-flex flex-wrap ">
-            <button class="btn btn-outline-light" id="sidebarToggle" (click)="toggleSideBar()"> <i class="bi bi-filter-left"></i> menu</button>
+            <button class="btn btn-outline-light" id="sidebarToggle" *ngIf="user" (click)="toggleSideBar()"> <i class="bi bi-filter-left"></i> menu</button>
 
             <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none mx-auto">
                 <h1 class="h2 text-center ms-2 fw-light"> E-bank </h1>
             </a>
 
-            <div class="text-end">
-                <button type="button" class="btn btn-outline-light me-2"> <i class="bi bi-box-arrow-in-right"></i> Login</button>
-                <button type="button" class="btn btn-outline-warning"> <i class="bi bi-person-plus"></i> Sign-up</button>
-            </div>
+            <ng-container *ngIf="!user; else authenticated">
+                <div class="text-end">
+                    <button type="button" class="btn btn-outline-light me-2" routerLink="/login"> <i class="bi bi-box-arrow-in-right"></i> Login</button>
+                    <button type="button" class="btn btn-outline-warning " data-bs-toggle="tooltip"
+                    title="You can't sign-up yet !"> <i class="bi bi-person-plus"></i> Sign-up</button>
+                </div>
+            </ng-container>
+            <ng-template #authenticated>
+                <div class="text-end" >
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle action-button text-white text-decoration-none" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                            <i class="bi bi-person-fill"></i>
+                            {{ user?.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item text-white text-decoration-none" (click)="logout()"> 
+                                <i class="bi bi-box-arrow-left"></i>
+                                Se déconnecter
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item  text-white disabled" href="#" > 
+                                👋👋 welcome !
+                                {{ user?.username }}
+                            !</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item  text-white disabled" href="#" *ngIf="userRole=='ADMIN'"  > your role : <strong>admin</strong> !</a></li>
+                            <li><a class="dropdown-item text-white disabled" href="#" *ngIf="userRole=='USER'" > your role : <strong>user</strong> !</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </ng-template>
         </div>
     </div>
 </header>

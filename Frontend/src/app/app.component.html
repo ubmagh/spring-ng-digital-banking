@@ -1,12 +1,12 @@
 <div class="d-flex" id="wrapper">
 
-  <app-sidebar [sideBarObservable]="sideBarSubject.asObservable()" ></app-sidebar>
+  <app-sidebar [sideBarObservable]="sideBarSubject.asObservable()" *ngIf="user" ></app-sidebar>
 
 
   <div id="page-content-wrapper">
     
     
-    <app-navbar [sideBarSubject]="sideBarSubject" ></app-navbar>
+    <app-navbar [sideBarSubject]="sideBarSubject"  ></app-navbar>
     
     <div class="container-fluid py-5 px-3" id="content">
 

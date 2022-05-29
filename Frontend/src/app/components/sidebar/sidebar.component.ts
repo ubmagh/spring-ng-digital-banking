@@ -1,5 +1,7 @@
 import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
+import { User } from 'src/app/models/user.model';
+import { SecurityService } from 'src/app/services/security.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -12,9 +14,24 @@ export class SidebarComponent implements OnInit, OnDestroy {
   subscription?: Subscription;
   sidebarToggle: any = null;
 
-  constructor() {}
+  isAdmin = false;
+  securityServicSub$ ?: Subscription;
+
+  constructor( private securityService:SecurityService) {
+    this.securityServicSub$ = this.securityService.userSubject.subscribe({
+      next: user=>{
+        this.isAdmin = user?.roles.find(e=>e.roleName=="ADMIN")!=undefined;
+      }, 
+      error: err=>{
+        this.isAdmin = false;
+      }
+    })
+  }
 
   ngOnInit(): void {
+
+    this.isAdmin = this.securityService.user?.roles.find(e=>e.roleName=="ADMIN")!=undefined;
+
     this.sidebarToggle = document.body.querySelector('#sidebarToggle');
     if (this.sidebarToggle) {
       if (localStorage.getItem('sb|sidebar-toggle') === 'true') {
@@ -31,5 +48,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
+    this.securityServicSub$?.unsubscribe();
   }
 }

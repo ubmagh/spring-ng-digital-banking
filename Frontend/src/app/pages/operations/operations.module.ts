@@ -11,6 +11,7 @@ import { CustomersCardComponent } from './components/customers-card/customers-ca
 import { AccountsCardComponent } from './components/accounts-card/accounts-card.component';
 import { OperationsCardComponent } from './components/operations-card/operations-card.component';
 import { OperationService } from 'src/app/services/operation.service';
+import { TokenInterceptorProvider } from 'src/app/interceptors/tokenInterceptor';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { OperationService } from 'src/app/services/operation.service';
   providers:[
     CustomerService,
     AccountService,
-    OperationService
+    OperationService,
+    TokenInterceptorProvider
   ]
 })
 export class OperationsModule { }

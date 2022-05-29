@@ -8,6 +8,7 @@ import { CustomerService } from 'src/app/services/customer.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NewCustomerComponent } from './new-customer/new-customer.component';
 import { EditCustomerComponent } from './edit-customer/edit-customer.component';
+import { TokenInterceptorProvider } from 'src/app/interceptors/tokenInterceptor';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { EditCustomerComponent } from './edit-customer/edit-customer.component';
     ReactiveFormsModule
   ],
   providers: [
-    CustomerService
+    CustomerService,
+    TokenInterceptorProvider
   ]
 })
 export class CustomersModule { }

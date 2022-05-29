@@ -4,11 +4,12 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { BankAccount } from '../models/account.model';
 import { Operation, OperationResponseObject } from '../models/operation.model';
+import { SecurityService } from './security.service';
 
 @Injectable()
 export class AccountService {
 
-  constructor( private http:HttpClient ) { }
+  constructor( private http:HttpClient, private securityService: SecurityService ) { }
 
   public saveAccount( account :BankAccount): Observable<BankAccount> {
     return this.http.post<BankAccount>(environment.backendUrl+"/api/accounts", account);
