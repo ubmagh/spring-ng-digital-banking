@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Subject, Subscription } from 'rxjs';
 import { User } from 'src/app/models/user.model';
 import { SecurityService } from 'src/app/services/security.service';
@@ -17,7 +18,7 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
   userRole ="";
   userSub$ ?:Subscription;
 
-  constructor( private securityService:SecurityService, private router:Router) {
+  constructor( private securityService:SecurityService, private router:Router, private toastr: ToastrService) {
     this.userSub$ = this.securityService.userSubject.subscribe({
       next: user=>{
         this.user = user;
@@ -52,6 +53,10 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.userSub$?.unsubscribe(); 
+  }
+
+  qliq(){
+    this.toastr.info( "You can't yet register ...", "register not yet available")
   }
 
 }

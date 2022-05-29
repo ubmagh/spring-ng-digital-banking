@@ -10,7 +10,7 @@
             <ng-container *ngIf="!user; else authenticated">
                 <div class="text-end">
                     <button type="button" class="btn btn-outline-light me-2" routerLink="/login"> <i class="bi bi-box-arrow-in-right"></i> Login</button>
-                    <button type="button" class="btn btn-outline-warning " data-bs-toggle="tooltip"
+                    <button type="button" class="btn btn-outline-warning " data-bs-toggle="tooltip" (click)="qliq()"
                     title="You can't sign-up yet !"> <i class="bi bi-person-plus"></i> Sign-up</button>
                 </div>
             </ng-container>
